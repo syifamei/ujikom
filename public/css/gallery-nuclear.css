@@ -1,0 +1,306 @@
+/* NUCLEAR CSS - FORCE GALLERY GRID LAYOUT */
+/* This CSS will FORCE the gallery to display as 3-column grid */
+
+/* Reset everything that might interfere */
+* {
+    box-sizing: border-box !important;
+}
+
+/* Force gallery container */
+.gallery-container {
+    width: 100% !important;
+    margin: 0 auto !important;
+    padding: 0 2rem 4rem !important;
+    display: block !important;
+    max-width: none !important;
+}
+
+/* FORCE GALLERY GRID - NUCLEAR OPTION */
+.gallery-grid,
+#galleryGrid,
+.gallery-container .gallery-grid,
+.gallery-container #galleryGrid,
+html body .gallery-grid,
+html body #galleryGrid,
+html body .gallery-container .gallery-grid,
+html body .gallery-container #galleryGrid,
+* .gallery-grid,
+* #galleryGrid,
+* .gallery-container .gallery-grid,
+* .gallery-container #galleryGrid,
+div.gallery-grid,
+div#galleryGrid,
+div.gallery-container .gallery-grid,
+div.gallery-container #galleryGrid,
+html body div.gallery-grid,
+html body div#galleryGrid,
+html body div.gallery-container .gallery-grid,
+html body div.gallery-container #galleryGrid {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 1.5rem !important;
+    padding: 1rem 0 !important;
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
+    position: relative !important;
+    z-index: 99999 !important;
+    flex-direction: unset !important;
+    flex-wrap: unset !important;
+    justify-content: unset !important;
+    align-items: unset !important;
+    flex: unset !important;
+    order: unset !important;
+    float: none !important;
+    clear: both !important;
+    overflow: visible !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    grid-auto-flow: row !important;
+    grid-auto-rows: auto !important;
+    align-content: start !important;
+    justify-items: stretch !important;
+    align-items: start !important;
+}
+
+/* FORCE ALL GALLERY CARDS */
+.gallery-card,
+.gallery-grid .gallery-card,
+#galleryGrid .gallery-card,
+html body .gallery-card,
+html body .gallery-grid .gallery-card,
+html body #galleryGrid .gallery-card,
+* .gallery-card,
+* .gallery-grid .gallery-card,
+* #galleryGrid .gallery-card,
+div.gallery-card,
+div.gallery-grid .gallery-card,
+div#galleryGrid .gallery-card,
+html body div.gallery-card,
+html body div.gallery-grid .gallery-card,
+html body div#galleryGrid .gallery-card {
+    display: block !important;
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    flex: unset !important;
+    order: unset !important;
+    float: none !important;
+    clear: both !important;
+    background: white !important;
+    border-radius: 16px !important;
+    overflow: hidden !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    position: relative !important;
+    height: 100% !important;
+    flex-direction: column !important;
+    border: 1px solid rgba(0, 0, 0, 0.05) !important;
+    cursor: pointer !important;
+    transform: none !important;
+    filter: none !important;
+}
+
+/* Force gallery card content */
+.gallery-card-content {
+    padding: 1.5rem !important;
+    flex-grow: 1 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    background: white !important;
+}
+
+/* Force gallery image container */
+.gallery-img-container {
+    position: relative !important;
+    width: 100% !important;
+    padding-top: 100% !important;
+    overflow: hidden !important;
+    background: #F9FAFB !important;
+    aspect-ratio: 1/1 !important;
+}
+
+/* Force gallery image */
+.gallery-image {
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    will-change: transform !important;
+}
+
+/* Force gallery title */
+.gallery-title {
+    font-size: 1.1rem !important;
+    font-weight: 600 !important;
+    color: #1F2937 !important;
+    margin: 0 0 0.5rem !important;
+    line-height: 1.4 !important;
+    text-align: left !important;
+    display: block !important;
+    width: 100% !important;
+    max-width: none !important;
+}
+
+/* Force gallery category */
+.gallery-category {
+    font-size: 0.85rem !important;
+    color: #6B7280 !important;
+    margin-bottom: 1rem !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 0.5rem !important;
+    text-align: left !important;
+    width: 100% !important;
+    max-width: none !important;
+}
+
+/* Force gallery actions */
+.gallery-actions {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    margin-top: auto !important;
+    padding-top: 1rem !important;
+    border-top: 1px solid #E5E7EB !important;
+    width: 100% !important;
+    max-width: none !important;
+}
+
+/* Force action buttons */
+.action-btn {
+    background: none !important;
+    border: none !important;
+    color: #6B7280 !important;
+    font-size: 1rem !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 0.5rem !important;
+    cursor: pointer !important;
+    padding: 0.75rem !important;
+    border-radius: 12px !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    text-decoration: none !important;
+    position: relative !important;
+    z-index: 1 !important;
+}
+
+/* Force action count */
+.action-count {
+    font-size: 0.85rem !important;
+    font-weight: 500 !important;
+    margin-left: 0.25rem !important;
+    color: inherit !important;
+}
+
+/* FORCE GRID LAYOUT - ULTIMATE NUCLEAR */
+html body div#galleryGrid,
+html body div.gallery-grid,
+html body .gallery-container div#galleryGrid,
+html body .gallery-container div.gallery-grid,
+html body .gallery-container .gallery-grid,
+html body .gallery-container #galleryGrid,
+html body .gallery-grid,
+html body #galleryGrid {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 1.5rem !important;
+    padding: 1rem 0 !important;
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
+    position: relative !important;
+    z-index: 99999 !important;
+    flex-direction: unset !important;
+    flex-wrap: unset !important;
+    justify-content: unset !important;
+    align-items: unset !important;
+    flex: unset !important;
+    order: unset !important;
+    float: none !important;
+    clear: both !important;
+    overflow: visible !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    grid-auto-flow: row !important;
+    grid-auto-rows: auto !important;
+    align-content: start !important;
+    justify-items: stretch !important;
+    align-items: start !important;
+}
+
+/* FORCE ALL GALLERY CARDS - ULTIMATE NUCLEAR */
+html body .gallery-card,
+html body .gallery-grid .gallery-card,
+html body #galleryGrid .gallery-card,
+html body .gallery-container .gallery-card,
+html body .gallery-container .gallery-grid .gallery-card,
+html body .gallery-container #galleryGrid .gallery-card {
+    display: block !important;
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    flex: unset !important;
+    order: unset !important;
+    float: none !important;
+    clear: both !important;
+    background: white !important;
+    border-radius: 16px !important;
+    overflow: hidden !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    position: relative !important;
+    height: 100% !important;
+    flex-direction: column !important;
+    border: 1px solid rgba(0, 0, 0, 0.05) !important;
+    cursor: pointer !important;
+    transform: none !important;
+    filter: none !important;
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+    .gallery-grid,
+    #galleryGrid,
+    html body .gallery-grid,
+    html body #galleryGrid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 1.25rem !important;
+    }
+}
+
+@media (max-width: 768px) {
+    .gallery-grid,
+    #galleryGrid,
+    html body .gallery-grid,
+    html body #galleryGrid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 1rem !important;
+    }
+}
+
+@media (max-width: 576px) {
+    .gallery-grid,
+    #galleryGrid,
+    html body .gallery-grid,
+    html body #galleryGrid {
+        grid-template-columns: 1fr !important;
+        gap: 1rem !important;
+    }
+}
+
+
+
