@@ -4,14 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Comment extends Model
 {
     use HasFactory;
 
     protected $table = 'foto_comments';
-
+    
     protected $fillable = [
         'foto_id',
         'user_id',
@@ -24,93 +23,30 @@ class Comment extends Model
 
     protected $casts = [
         'created_at' => 'datetime',
-        'updated_at' => 'datetime'
+        'updated_at' => 'datetime',
     ];
 
     /**
      * Get the foto that owns the comment
      */
-    public function foto(): BelongsTo
+    public function foto()
     {
         return $this->belongsTo(Foto::class, 'foto_id');
     }
 
     /**
-     * Get the user who made this comment
+     * Get the user who made the comment
      */
-    public function user(): BelongsTo
+    public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     /**
-     * Scope for approved comments
+     * Get the commenter name (author_name or user name)
      */
-    public function scopeApproved($query)
+    public function getCommenterNameAttribute()
     {
-        return $query->where('status', 'approved');
-    }
-
-    /**
-     * Scope for pending comments
-     */
-    public function scopePending($query)
-    {
-        return $query->where('status', 'pending');
-    }
-
-    /**
-     * Scope for rejected comments
-     */
-    public function scopeRejected($query)
-    {
-        return $query->where('status', 'rejected');
-    }
-
-    /**
-     * Get commenter name
-     */
-    public function getCommenterNameAttribute(): string
-    {
-        return $this->user ? $this->user->name : $this->author_name;
-    }
-
-    /**
-     * Check if comment is approved
-     */
-    public function isApproved(): bool
-    {
-        return $this->status === 'approved';
-    }
-
-    /**
-     * Check if comment is pending
-     */
-    public function isPending(): bool
-    {
-        return $this->status === 'pending';
-    }
-
-    /**
-     * Check if comment is rejected
-     */
-    public function isRejected(): bool
-    {
-        return $this->status === 'rejected';
+        return $this->author_name ?? $this->user?->name ?? 'Anonim';
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

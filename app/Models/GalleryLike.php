@@ -19,20 +19,10 @@ class GalleryLike extends Model
     ];
 
     /**
-     * Get the user who made this like/dislike
+     * Get the gallery that owns the like
      */
-    public function user(): BelongsTo
+    public function gallery()
     {
-        return $this->belongsTo(User::class);
-    }
-
-    /**
-     * Get the gallery item
-     */
-    public function galleryItem(): BelongsTo
-    {
-        return $this->belongsTo(GalleryItem::class);
+        return $this->belongsTo(Gallery::class, 'gallery_item_id');
     }
 }
-
-

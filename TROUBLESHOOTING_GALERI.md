@@ -296,3 +296,18 @@ php artisan db:seed --class=FotoSeeder
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

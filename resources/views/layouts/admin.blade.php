@@ -81,7 +81,7 @@
         }
 
         .sidebar {
-            min-height: 100vh;
+            height: 100vh;
             background: var(--sidebar-bg);
             color: var(--sidebar-text);
             position: fixed;
@@ -89,11 +89,13 @@
             left: 0;
             bottom: 0;
             z-index: 1040;
-            overflow-y: auto;
+            overflow-y: hidden;
             width: var(--sidebar-width);
             box-shadow: var(--sidebar-shadow);
             border-right: 1px solid #e2e8f0;
-            padding: 1.5rem 0;
+            padding: 0.5rem 0;
+            display: flex;
+            flex-direction: column;
         }
         
         @media (max-width: 767.98px) {
@@ -108,10 +110,11 @@
         }
 
         .sidebar-header {
-            padding: 0 1rem 1.5rem;
+            padding: 0.5rem 1rem 0.75rem;
             text-align: center;
             border-bottom: 1px solid #e2e8f0;
-            margin-bottom: 1rem;
+            margin-bottom: 0.5rem;
+            flex-shrink: 0;
         }
 
         .sidebar-logo {
@@ -119,18 +122,18 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            margin-bottom: 1.5rem;
-            padding: 1rem;
+            margin-bottom: 0.75rem;
+            padding: 0.5rem;
         }
 
         .sidebar-logo-icon {
-            width: 60px;
-            height: 60px;
+            width: 40px;
+            height: 40px;
             object-fit: contain;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.25rem;
             background: rgba(59, 130, 246, 0.1);
-            border-radius: 12px;
-            padding: 0.5rem;
+            border-radius: 8px;
+            padding: 0.25rem;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -153,7 +156,7 @@
         }
 
         .sidebar-title {
-            font-size: 1.1rem;
+            font-size: 0.9rem;
             font-weight: 700;
             color: var(--sidebar-text);
             margin: 0;
@@ -161,31 +164,35 @@
         }
 
         .sidebar-subtitle {
-            font-size: 0.75rem;
+            font-size: 0.65rem;
             color: var(--sidebar-text-muted);
-            margin: 0.25rem 0 0 0;
+            margin: 0.1rem 0 0 0;
             font-weight: 500;
             letter-spacing: 0.5px;
         }
 
         .sidebar-nav {
-            padding: 1rem 0.75rem;
+            padding: 0.5rem 0.75rem;
+            flex: 1;
+            overflow-y: auto;
         }
 
         .nav-link {
-            padding: 0.8rem 1.5rem;
+            padding: 0.6rem 1rem;
             color: var(--sidebar-text);
             display: flex;
             align-items: center;
             font-weight: 500;
             text-decoration: none;
             border: none;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             white-space: nowrap;
-            border-radius: 8px;
-            margin: 0.2rem 0.75rem;
+            border-radius: 6px;
+            margin: 0.1rem 0.5rem;
             transition: all 200ms ease;
             position: relative;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .nav-link::before {
@@ -207,9 +214,9 @@
         }
 
         .nav-link i {
-            font-size: 1.1rem;
-            margin-right: 0.8rem;
-            width: 20px;
+            font-size: 1rem;
+            margin-right: 0.6rem;
+            width: 18px;
             text-align: center;
             color: var(--cyan);
             transition: all 0.2s ease;
@@ -221,6 +228,13 @@
 
         .nav-link.active i { 
             color: #FFFFFF; 
+        }
+
+        .nav-link span {
+            flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
 
         .main-content {
@@ -354,7 +368,7 @@
 
         /* Scrollbar Styling */
         .sidebar::-webkit-scrollbar {
-            width: 6px;
+            width: 4px;
         }
 
         .sidebar::-webkit-scrollbar-track {
@@ -363,11 +377,16 @@
 
         .sidebar::-webkit-scrollbar-thumb {
             background: rgba(59, 130, 246, 0.4);
-            border-radius: 3px;
+            border-radius: 2px;
         }
 
         .sidebar::-webkit-scrollbar-thumb:hover { 
             background: rgba(59, 130, 246, 0.6); 
+        }
+
+        /* Ensure nav items fit without scrolling */
+        .sidebar-nav {
+            max-height: calc(100vh - 120px);
         }
 
         /* Mobile Toggle Button */
@@ -413,7 +432,7 @@
                 <div class="sidebar-header">
                     <div class="sidebar-logo">
                         <div class="sidebar-logo-icon">
-                            <img src="{{ asset('images/logo smkn 4.png') }}" alt="SMKN 4 Logo" style="width: 50px; height: 50px; object-fit: contain;">
+                            <img src="{{ asset('images/logo smkn 4.png') }}" alt="SMKN 4 Logo" style="width: 30px; height: 30px; object-fit: contain;">
                         </div>
                         <div>
                             <h4 class="sidebar-title">SMKN 4 BOGOR</h4>
@@ -456,6 +475,11 @@
                     <a class="nav-link {{ request()->routeIs('admin.agenda.*') ? 'active' : '' }}" href="{{ route('admin.agenda.index') }}">
                         <i class="fas fa-calendar-alt"></i>
                         <span>Kelola Agenda</span>
+                    </a>
+                    
+                    <a class="nav-link {{ request()->routeIs('admin.informasi.*') ? 'active' : '' }}" href="{{ route('admin.informasi.index') }}">
+                        <i class="fas fa-newspaper"></i>
+                        <span>Kelola Informasi</span>
                     </a>
                     
                     <a class="nav-link" href="{{ route('admin.logout') }}" onclick="return confirm('Yakin ingin logout?')">

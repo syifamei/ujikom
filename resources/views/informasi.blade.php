@@ -12,184 +12,218 @@
 
 @section('styles')
 <style>
-    .info-card {
-        border-radius: 10px;
-        overflow: hidden;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-        height: 100%;
-        display: flex;
-        flex-direction: column;
+    /* Header Styles */
+    .info-header-section {
+        background: linear-gradient(135deg, #4e54c8, #8f94fb);
+        border-radius: 16px;
+        padding: 2rem;
+        margin-bottom: 2.5rem;
+        color: white;
+        box-shadow: 0 10px 30px rgba(78, 84, 200, 0.15);
     }
-    
+
+    .info-header-icon {
+        width: 60px;
+        height: 60px;
+        border-radius: 16px;
+        background: rgba(255, 255, 255, 0.15);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 1.5rem;
+    }
+
+    .info-header-icon i {
+        font-size: 1.75rem;
+        color: white;
+    }
+
+    .info-header-title {
+        font-size: 2rem;
+        font-weight: 700;
+        margin: 0 0 0.5rem 0;
+        color: white;
+    }
+
+    .info-header-subtitle {
+        color: rgba(255, 255, 255, 0.9);
+        margin: 0;
+        font-size: 1.1rem;
+        font-weight: 400;
+    }
+
+    /* Card Styles */
+    .info-card {
+        border-radius: 12px;
+        transition: all 0.3s ease;
+        height: 100%;
+        border: 1px solid #e9ecef;
+        background: white;
+        overflow: hidden;
+    }
+
     .info-card:hover {
         transform: translateY(-5px);
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1) !important;
     }
-    
+
     .info-image {
-        height: 200px;
+        height: 180px;
         overflow: hidden;
-        position: relative;
     }
-    
+
     .info-image img {
         width: 100%;
         height: 100%;
         object-fit: cover;
         transition: transform 0.5s ease;
     }
-    
+
     .info-card:hover .info-image img {
         transform: scale(1.05);
     }
-    
+
     .info-content {
-        padding: 20px;
+        padding: 1.25rem;
         flex: 1;
         display: flex;
         flex-direction: column;
     }
-    
+
     .info-date {
-        font-size: 0.85rem;
+        font-size: 0.8rem;
         color: #6c757d;
-        margin-bottom: 8px;
+        margin-bottom: 0.5rem;
     }
-    
+
     .info-title {
         font-size: 1.1rem;
         font-weight: 600;
-        margin-bottom: 10px;
-        color: #2c3e50;
+        margin: 0 0 0.75rem 0;
+        color: #2d3748;
+        line-height: 1.4;
     }
-    
+
     .info-excerpt {
-        color: #6c757d;
-        margin-bottom: 15px;
+        color: #4a5568;
+        font-size: 0.95rem;
+        line-height: 1.6;
+        margin-bottom: 1rem;
         flex-grow: 1;
     }
-    
+
     .read-more {
-        color: #0d6efd;
+        color: #4e54c8;
         font-weight: 500;
+        font-size: 0.9rem;
         text-decoration: none;
         display: inline-flex;
         align-items: center;
-        transition: color 0.3s ease;
+        transition: all 0.2s ease;
     }
-    
+
     .read-more:hover {
-        color: #0a58ca;
+        color: #3a3f9e;
     }
-    
+
     .read-more i {
-        margin-left: 5px;
-        transition: transform 0.3s ease;
+        margin-left: 0.5rem;
+        transition: transform 0.2s ease;
     }
-    
+
     .read-more:hover i {
         transform: translateX(3px);
     }
-    
+
+    /* Empty State */
     .empty-state {
         text-align: center;
-        padding: 60px 20px;
-        color: #6c757d;
+        padding: 3rem 1rem;
+        background: #f8f9fa;
+        border: 1px dashed #dee2e6;
+        border-radius: 12px;
+        margin: 2rem 0;
     }
-    
+
     .empty-state i {
-        font-size: 4rem;
-        margin-bottom: 20px;
-        color: #0d6efd;
-        opacity: 0.5;
+        font-size: 3rem;
+        color: #adb5bd;
+        margin-bottom: 1rem;
+        opacity: 0.7;
     }
 </style>
 @endsection
 
 @section('content')
-<!-- Page Header -->
-<section class="py-4" style="background: linear-gradient(135deg, #0d6efd, #0b5ed7);">
-    <div class="container">
-        <div class="row">
-            <div class="col-12 text-center">
-                <h1 class="fw-bold text-white" style="font-size: 1.5rem;">
-                    <i class="fas fa-info-circle me-2"></i>
-                    Informasi Sekolah
-                </h1>
-                <p class="text-white-50 small">
-                    Informasi terbaru dan pengumuman dari sekolah kami
-            </div>
-            <div class="col-lg-6">
-                <nav aria-label="breadcrumb" class="justify-content-lg-end d-flex">
-                    <ol class="breadcrumb mb-0">
-                        <li class="breadcrumb-item"><a href="{{ url('/') }}">Beranda</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">Informasi</li>
-                    </ol>
-                </nav>
+<div class="container py-5">
+    <!-- Header Section -->
+    <div class="info-header-section mb-5">
+        <div class="info-header-content">
+            <div class="info-header-left">
+                <div class="info-header-icon">
+                    <i class="fas fa-info-circle"></i>
+                </div>
+                <div class="info-header-text">
+                    <h1 class="info-header-title">Informasi Sekolah</h1>
+                    <p class="info-header-subtitle">Informasi terbaru dan pengumuman dari SMKN 4 Bogor</p>
+                </div>
             </div>
         </div>
     </div>
-</section>
 
-<!-- Informasi Grid -->
-<section class="py-5">
-    <div class="container">
-        <div class="row">
-            <!-- Main Content -->
-            <div class="col-lg-8">
-                <div class="row g-4">
-                    @forelse($informasiList as $info)
-                        <div class="col-md-6">
-                            <div class="info-card h-100">
-                                <div class="info-image">
-                                    @if($info->gambar)
-                                        <img src="{{ asset('storage/' . $info->gambar) }}" alt="{{ $info->judul }}" class="img-fluid">
-                                    @else
-                                        <img src="https://via.placeholder.com/600x400?text=No+Image" alt="No Image" class="img-fluid">
-                                    @endif
+    <div class="row">
+        <!-- Main Content -->
+        <div class="col-lg-8">
+            <div class="row g-4">
+                @forelse($informasiList as $info)
+                    <div class="col-md-6">
+                        <div class="info-card">
+                            @if($info->gambar)
+                            <div class="info-image">
+                                <img src="{{ asset('storage/' . $info->gambar) }}" alt="{{ $info->judul }}" class="img-fluid">
+                            </div>
+                            @endif
+                            <div class="info-content">
+                                <div class="info-date">
+                                    <i class="far fa-calendar-alt me-1"></i> {{ $info->created_at->translatedFormat('l, d F Y') }}
                                 </div>
-                                <div class="info-content">
-                                    <div class="info-date">
-                                        <i class="far fa-calendar-alt me-1"></i> {{ $info->created_at->translatedFormat('d F Y') }}
-                                    </div>
-                                    <h3 class="info-title">{{ $info->judul }}</h3>
-                                    <p class="info-excerpt">{{ \Illuminate\Support\Str::limit(strip_tags($info->isi), 120) }}</p>
-                                    <a href="{{ route('informasi.show', $info->id) }}" class="read-more">
-                                        Baca Selengkapnya <i class="fas fa-arrow-right"></i>
-                                    </a>
-                                </div>
+                                <h3 class="info-title">{{ $info->judul }}</h3>
+                                <p class="info-excerpt">{{ \Illuminate\Support\Str::limit(strip_tags($info->isi), 140) }}</p>
+                                <a href="{{ route('informasi.show', $info->id) }}" class="read-more">
+                                    Baca selengkapnya <i class="fas fa-arrow-right"></i>
+                                </a>
                             </div>
                         </div>
-                    @empty
-                        <div class="col-12">
-                            <div class="empty-state">
-                                <i class="far fa-newspaper"></i>
-                                <h4>Belum ada informasi</h4>
-                                <p>Tidak ada informasi yang tersedia saat ini.</p>
-                            </div>
-                        </div>
-                    @endforelse
-                </div>
-
-                <!-- Pagination -->
-                @if($informasiList->hasPages())
-                    <div class="d-flex justify-content-center mt-5">
-                        {{ $informasiList->links() }}
                     </div>
-                @endif
+                @empty
+                    <div class="col-12">
+                        <div class="empty-state">
+                            <i class="far fa-newspaper"></i>
+                            <h4>Belum ada informasi</h4>
+                            <p>Tidak ada informasi yang tersedia saat ini.</p>
+                        </div>
+                    </div>
+                @endforese
             </div>
+
+            <!-- Pagination -->
+            @if($informasiList->hasPages())
+                <div class="mt-5 d-flex justify-content-center">
+                    {{ $informasiList->links('pagination::bootstrap-5') }}
+                </div>
+            @endif
+        </div>
             
             <!-- Sidebar -->
             <div class="col-lg-4">
                 <!-- Search Box -->
-                <div class="card mb-4 shadow-sm">
+                <div class="card mb-4 border-0 shadow-sm">
                     <div class="card-body">
                         <h5 class="card-title mb-3"><i class="fas fa-search me-2"></i> Cari Informasi</h5>
                         <form action="{{ route('informasi.search') }}" method="GET">
                             <div class="input-group">
-                                <input type="text" name="q" class="form-control" placeholder="Kata kunci...">
-                                <button class="btn btn-primary" type="submit">
+                                <input type="text" name="q" class="form-control" placeholder="Kata kunci..." style="border-top-right-radius: 0; border-bottom-right-radius: 0;">
+                                <button class="btn btn-primary" type="submit" style="border-top-left-radius: 0; border-bottom-left-radius: 0;">
                                     <i class="fas fa-search"></i>
                                 </button>
                             </div>
@@ -198,30 +232,19 @@
                 </div>
                 
                 <!-- Kategori -->
-                <div class="card mb-4 shadow-sm">
-                    <div class="card-header bg-primary text-white">
-                        <h5 class="mb-0"><i class="fas fa-tags me-2"></i> Kategori Informasi</h5>
-                    </div>
-                    <div class="list-group list-group-flush">
-                        <a href="{{ route('informasi.index') }}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-                            Semua Informasi
-                            <span class="badge bg-primary rounded-pill">{{ \App\Models\Informasi::count() }}</span>
-                        </a>
-                        <a href="{{ route('informasi.kategori', 'berita') }}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-                            Berita Sekolah
-                            <span class="badge bg-primary rounded-pill">{{ \App\Models\Informasi::where('kategori', 'berita')->count() }}</span>
-                        </a>
-                        <a href="{{ route('informasi.kategori', 'pengumuman') }}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-                            Pengumuman
-                            <span class="badge bg-primary rounded-pill">{{ \App\Models\Informasi::where('kategori', 'pengumuman')->count() }}</span>
-                        </a>
-                        <a href="{{ route('informasi.kategori', 'kegiatan') }}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-                            Kegiatan
-                            <span class="badge bg-primary rounded-pill">{{ \App\Models\Informasi::where('kategori', 'kegiatan')->count() }}</span>
-                        </a>
+                <div class="card mb-4 border-0 shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title mb-3"><i class="fas fa-folder me-2"></i> Kategori</h5>
+                        <div class="list-group list-group-flush">
+                            @foreach(\App\Models\Kategori::all() as $kategori)
+                                <a href="{{ route('kategori.show', $kategori->slug) }}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center border-0 px-0 py-2">
+                                    {{ $kategori->nama }}
+                                    <span class="badge bg-primary bg-opacity-10 text-primary rounded-pill">{{ $kategori->posts_count ?? 0 }}</span>
+                                </a>
+                            @endforeach
+                        </div>
                     </div>
                 </div>
-                
                 
                 <!-- Informasi Populer -->
                 <div class="card mt-4 shadow-sm">

@@ -9,28 +9,28 @@
 <div class="row mb-4">
     <div class="col-12">
         <div class="card border-0 shadow-sm bg-gradient-primary text-white">
-            <div class="card-body text-center py-4">
-                <h1 class="h3 mb-2">
+            <div class="card-body text-center py-3">
+                <h1 class="h4 mb-2">
                     <i class="fas fa-tachometer-alt me-2"></i>
                     Selamat Datang, {{ Session::get('admin_username') }}!
                 </h1>
-                <p class="mb-0">Kelola konten website SMKN 4 BOGOR dengan mudah</p>
+                <p class="mb-0 small">Kelola konten website SMKN 4 BOGOR dengan mudah</p>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Main Stats Cards -->
+<!-- Main Stats Cards - Responsive Grid -->
 <div class="row mb-4">
-    <div class="col-lg-3 col-md-6 mb-3">
-        <div class="card border-0 shadow-sm h-100">
-            <div class="card-body text-center">
-                <div class="mb-3">
+    <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 mb-3">
+        <div class="card border-0 shadow-sm h-100 stats-card">
+            <div class="card-body text-center p-3">
+                <div class="mb-2">
                     <i class="fas fa-images fa-2x text-primary"></i>
                 </div>
-                <h3 class="h2 mb-1 text-dark">{{ $totalFotos }}</h3>
-                <p class="text-muted mb-0">Total Foto</p>
-                <small class="opacity-75">
+                <h4 class="h3 mb-1 text-dark">{{ $totalFotos }}</h4>
+                <p class="text-muted mb-0 small">Total Foto</p>
+                <small class="text-info">
                     <i class="fas fa-arrow-up me-1"></i>
                     {{ $fotosBulanIni }} bulan ini
                 </small>
@@ -38,107 +38,89 @@
         </div>
     </div>
     
-    <div class="col-lg-3 col-md-6 mb-3">
-        <div class="card border-0 shadow-sm h-100">
-            <div class="card-body text-center">
-                <div class="mb-3">
-                    <i class="fas fa-tags fa-2x text-success"></i>
+    <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 mb-3">
+        <div class="card border-0 shadow-sm h-100 stats-card">
+            <div class="card-body text-center p-3">
+                <div class="mb-2">
+                    <i class="fas fa-newspaper fa-2x text-info"></i>
                 </div>
-                <h3 class="h2 mb-1 text-dark">{{ $totalKategoris }}</h3>
-                <p class="text-muted mb-0">Kategori</p>
-                <small class="text-info">
+                <h4 class="h3 mb-1 text-dark">{{ $totalInformasi }}</h4>
+                <p class="text-muted mb-0 small">Total Informasi</p>
+                <small class="text-success">
                     <i class="fas fa-check-circle me-1"></i>
+                    Aktif
+                </small>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 mb-3">
+        <div class="card border-0 shadow-sm h-100 stats-card">
+            <div class="card-body text-center p-3">
+                <div class="mb-2">
+                    <i class="fas fa-calendar fa-2x text-success"></i>
+                </div>
+                <h4 class="h3 mb-1 text-dark">{{ $totalAgenda ?? 0 }}</h4>
+                <p class="text-muted mb-0 small">Total Agenda</p>
+                <small class="text-warning">
+                    <i class="fas fa-clock me-1"></i>
+                    Terjadwal
+                </small>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 mb-3">
+        <div class="card border-0 shadow-sm h-100 stats-card">
+            <div class="card-body text-center p-3">
+                <div class="mb-2">
+                    <i class="fas fa-tags fa-2x text-warning"></i>
+                </div>
+                <h4 class="h3 mb-1 text-dark">{{ $totalKategoris }}</h4>
+                <p class="text-muted mb-0 small">Kategori</p>
+                <small class="text-primary">
+                    <i class="fas fa-tag me-1"></i>
                     {{ $kategorisAktif }} aktif
                 </small>
             </div>
         </div>
     </div>
-    
-    
-    <div class="col-lg-3 col-md-6 mb-3">
-        <div class="card border-0 shadow-sm h-100">
-            <div class="card-body text-center">
-                <div class="mb-3">
-                    <i class="fas fa-users fa-2x text-warning"></i>
-                </div>
-                <h3 class="h2 mb-1 text-dark">{{ $totalPetugas }}</h3>
-                <p class="text-muted mb-0">Petugas</p>
-                <small class="text-secondary">
-                    <i class="fas fa-user-shield me-1"></i>
-                    Admin aktif
-                </small>
-            </div>
-        </div>
-    </div>
 </div>
 
-<!-- Additional Stats Row -->
-<div class="row mb-4">
-    <div class="col-lg-4 col-md-6 mb-3">
-        <div class="card border-0 shadow-sm h-100">
-            <div class="card-body text-center">
-                <div class="mb-3">
-                    <i class="fas fa-newspaper fa-2x text-primary"></i>
-                </div>
-                <h4 class="h3 mb-1 text-dark">{{ $totalPosts }}</h4>
-                <p class="text-muted mb-0">Posts</p>
-            </div>
-        </div>
-    </div>
-    
-    <div class="col-lg-4 col-md-6 mb-3">
-        <div class="card border-0 shadow-sm h-100">
-            <div class="card-body text-center">
-                <div class="mb-3">
-                    <i class="fas fa-info-circle fa-2x text-info"></i>
-                </div>
-                <h4 class="h3 mb-1 text-dark">{{ $totalInformasi }}</h4>
-                <p class="text-muted mb-0">Informasi</p>
-            </div>
-        </div>
-    </div>
-    
-    <div class="col-lg-4 col-md-6 mb-3">
-        <div class="card border-0 shadow-sm h-100">
-            <div class="card-body text-center">
-                <div class="mb-3">
-                    <i class="fas fa-chart-pie fa-2x text-success"></i>
-                </div>
-                <h4 class="h3 mb-1 text-dark">{{ $kategorisAktif }}</h4>
-                <p class="text-muted mb-0">Kategori Aktif</p>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Recent Photos and Kategori Stats -->
-<div class="row mb-4">
-    <!-- Recent Photos -->
+<!-- Content Sections - Responsive Layout -->
+<div class="row">
+    <!-- Recent Photos - Mobile First -->
     <div class="col-lg-8 mb-4">
         <div class="card border-0 shadow-sm h-100">
-            <div class="card-header bg-white">
-                <h5 class="card-title mb-0">
-                    <i class="fas fa-images me-2 text-primary"></i>
-                    Foto Terbaru
-                </h5>
+            <div class="card-header bg-white border-0 py-3">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-images me-2 text-primary"></i>
+                        Preview Galeri
+                    </h5>
+                    <a href="{{ route('admin.fotos.index') }}" class="btn btn-primary btn-sm">
+                        <i class="fas fa-cog me-1"></i>
+                        Kelola Galeri
+                    </a>
+                </div>
             </div>
-            <div class="card-body">
+            <div class="card-body p-3">
                 @if($recentFotos->count() > 0)
-                <div class="row">
-                    @foreach($recentFotos as $foto)
-                    <div class="col-lg-4 col-md-6 mb-3">
-                        <div class="card border-0 shadow-sm">
-                            <img src="{{ asset('storage/' . $foto->path) }}" 
-                                 class="card-img-top" 
-                                 alt="{{ $foto->judul }}"
-                                 style="height: 120px; object-fit: cover;">
+                <div class="row g-2">
+                    @foreach($recentFotos->take(6) as $foto)
+                    <div class="col-lg-4 col-md-6 col-sm-6">
+                        <div class="card border-0 shadow-sm h-100">
+                            <div class="position-relative">
+                                <img src="{{ asset('storage/' . $foto->path) }}" 
+                                     class="card-img-top" 
+                                     alt="{{ $foto->judul }}"
+                                     style="height: 100px; object-fit: cover;">
+                                <div class="position-absolute top-0 end-0 m-2">
+                                    <span class="badge bg-primary bg-opacity-75">{{ $foto->kategori->nama ?? 'Umum' }}</span>
+                                </div>
+                            </div>
                             <div class="card-body p-2">
-                                <h6 class="card-title text-truncate mb-1">{{ $foto->judul }}</h6>
-                                <small class="text-muted">
-                                    <i class="fas fa-tag me-1"></i>
-                                    {{ $foto->kategori->nama ?? 'Tanpa Kategori' }}
-                                </small>
-                                <br>
+                                <h6 class="card-title text-truncate mb-1 small">{{ $foto->judul }}</h6>
                                 <small class="text-muted">
                                     <i class="fas fa-clock me-1"></i>
                                     {{ $foto->created_at->format('d M Y') }}
@@ -148,19 +130,13 @@
                     </div>
                     @endforeach
                 </div>
-                <div class="text-center mt-3">
-                    <a href="{{ route('admin.fotos.index') }}" class="btn btn-primary btn-sm">
-                        <i class="fas fa-eye me-2"></i>
-                        Lihat Semua Foto
-                    </a>
-                </div>
                 @else
                 <div class="text-center py-4">
                     <i class="fas fa-images fa-3x text-muted mb-3"></i>
                     <p class="text-muted">Belum ada foto</p>
-                    <a href="{{ route('admin.fotos.create') }}" class="btn btn-primary">
+                    <a href="{{ route('admin.fotos.create') }}" class="btn btn-primary btn-sm">
                         <i class="fas fa-plus me-2"></i>
-                        Tambah Foto Pertama
+                        Tambah Foto
                     </a>
                 </div>
                 @endif
@@ -168,114 +144,83 @@
         </div>
     </div>
     
-    <!-- Kategori Stats -->
+    <!-- Recent Information & Agenda -->
     <div class="col-lg-4 mb-4">
-        <div class="card border-0 shadow-sm h-100">
-            <div class="card-header bg-white">
-                <h5 class="card-title mb-0">
-                    <i class="fas fa-chart-pie me-2 text-success"></i>
-                    Statistik Kategori
-                </h5>
-            </div>
-            <div class="card-body">
-                @if($fotoPerKategori->count() > 0)
-                <div class="mb-3">
-                    <div class="d-flex justify-content-between align-items-center mb-2">
-                        <span class="fw-semibold">Kategori Populer:</span>
-                        @if($kategoriPopuler)
-                        <span class="badge bg-primary">{{ $kategoriPopuler->nama }}</span>
-                        @endif
-                    </div>
-                    <div class="progress mb-3" style="height: 8px;">
-                        <div class="progress-bar bg-primary" style="width: 100%"></div>
-                    </div>
+        <!-- Recent Information -->
+        <div class="card border-0 shadow-sm mb-3">
+            <div class="card-header bg-white border-0 py-3">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-newspaper me-2 text-info"></i>
+                        Informasi Terbaru
+                    </h5>
+                    <a href="{{ route('admin.informasi.index') }}" class="btn btn-info btn-sm">
+                        <i class="fas fa-eye me-1"></i>
+                        Lihat Semua
+                    </a>
                 </div>
-                
-                <div class="kategori-stats">
-                    @foreach($fotoPerKategori as $kategori)
-                    <div class="d-flex justify-content-between align-items-center mb-2">
-                        <div class="d-flex align-items-center">
-                            <i class="fas fa-tag text-muted me-2"></i>
-                            <span class="small">{{ $kategori->nama }}</span>
+            </div>
+            <div class="card-body p-3">
+                @if(isset($recentInformasi) && $recentInformasi->count() > 0)
+                <div class="list-group list-group-flush">
+                    @foreach($recentInformasi->take(3) as $info)
+                    <div class="list-group-item border-0 px-0 py-2">
+                        <div class="d-flex align-items-start">
+                            <i class="fas fa-file-alt text-info me-2 mt-1"></i>
+                            <div class="flex-grow-1">
+                                <h6 class="mb-1 small text-truncate">{{ $info->judul }}</h6>
+                                <small class="text-muted">{{ $info->created_at->format('d M Y') }}</small>
+                            </div>
                         </div>
-                        <span class="badge bg-light text-dark">{{ $kategori->fotos_count }}</span>
                     </div>
                     @endforeach
                 </div>
-                
-                <div class="text-center mt-3">
-                    <a href="{{ route('admin.kategori.index') }}" class="btn btn-success btn-sm">
-                        <i class="fas fa-cog me-2"></i>
-                        Kelola Kategori
-                    </a>
-                </div>
                 @else
-                <div class="text-center py-4">
-                    <i class="fas fa-tags fa-3x text-muted mb-3"></i>
-                    <p class="text-muted">Belum ada kategori</p>
-                    <a href="{{ route('admin.kategori.create') }}" class="btn btn-success">
-                        <i class="fas fa-plus me-2"></i>
-                        Tambah Kategori
-                    </a>
+                <div class="text-center py-3">
+                    <i class="fas fa-newspaper fa-2x text-muted mb-2"></i>
+                    <p class="text-muted small">Belum ada informasi</p>
                 </div>
                 @endif
             </div>
         </div>
-    </div>
-</div>
-
-<!-- Quick Actions -->
-<div class="row mb-4">
-    <div class="col-12">
-        <h4 class="mb-3 text-dark">
-            <i class="fas fa-tools me-2 text-primary"></i>
-            Quick Actions
-        </h4>
-    </div>
-</div>
-
-<div class="row">
-    <div class="col-lg-3 col-md-6 mb-3">
-        <a href="{{ route('admin.fotos.index') }}" class="text-decoration-none">
-            <div class="card border-0 shadow-sm h-100 action-card">
-                <div class="card-body text-center">
-                    <div class="mb-3">
-                        <i class="fas fa-images fa-3x text-primary"></i>
-                    </div>
-                    <h5 class="card-title text-dark">Kelola Galeri</h5>
-                    <p class="card-text text-muted small">Kelola foto dan galeri sekolah</p>
+        
+        <!-- Recent Agenda -->
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white border-0 py-3">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-calendar me-2 text-success"></i>
+                        Agenda Terdekat
+                    </h5>
+                    <a href="{{ route('admin.agenda.index') }}" class="btn btn-success btn-sm">
+                        <i class="fas fa-eye me-1"></i>
+                        Lihat Semua
+                    </a>
                 </div>
             </div>
-        </a>
-    </div>
-    
-    <div class="col-lg-3 col-md-6 mb-3">
-        <a href="{{ route('admin.kategori.index') }}" class="text-decoration-none">
-            <div class="card border-0 shadow-sm h-100 action-card">
-                <div class="card-body text-center">
-                    <div class="mb-3">
-                        <i class="fas fa-tags fa-3x text-success"></i>
+            <div class="card-body p-3">
+                @if(isset($recentAgenda) && $recentAgenda->count() > 0)
+                <div class="list-group list-group-flush">
+                    @foreach($recentAgenda->take(2) as $agenda)
+                    <div class="list-group-item border-0 px-0 py-2">
+                        <div class="d-flex align-items-start">
+                            <i class="fas fa-calendar-alt text-success me-2 mt-1"></i>
+                            <div class="flex-grow-1">
+                                <h6 class="mb-1 small text-truncate">{{ $agenda->judul }}</h6>
+                                <small class="text-muted">{{ $agenda->tanggal->format('d M Y') }}</small>
+                            </div>
+                        </div>
                     </div>
-                    <h5 class="card-title text-dark">Kelola Kategori</h5>
-                    <p class="card-text text-muted small">Kelola kategori foto</p>
+                    @endforeach
                 </div>
-            </div>
-        </a>
-    </div>
-    
-    
-    <div class="col-lg-3 col-md-6 mb-3">
-        <a href="{{ route('admin.petugas.index') }}" class="text-decoration-none">
-            <div class="card border-0 shadow-sm h-100 action-card">
-                <div class="card-body text-center">
-                    <div class="mb-3">
-                        <i class="fas fa-users fa-3x text-warning"></i>
-                    </div>
-                    <h5 class="card-title text-dark">Kelola Petugas</h5>
-                    <p class="card-text text-muted small">Manajemen akun admin</p>
+                @else
+                <div class="text-center py-3">
+                    <i class="fas fa-calendar fa-2x text-muted mb-2"></i>
+                    <p class="text-muted small">Belum ada agenda</p>
                 </div>
+                @endif
             </div>
-        </a>
+        </div>
     </div>
 </div>
 @endsection
@@ -312,31 +257,8 @@
         border-left-color: #ffc107;
     }
     
-    .action-card {
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
-    
-    .action-card:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 15px rgba(0,0,0,0.1) !important;
-    }
-    
-    .action-card:hover .fa-3x {
-        transform: scale(1.1);
-        transition: transform 0.2s ease;
-    }
-    
-    .fa-3x {
-        transition: transform 0.2s ease;
-    }
-    
-    .kategori-stats .badge {
-        font-size: 0.75rem;
-        padding: 0.25rem 0.5rem;
-    }
-    
     .card {
-        border-radius: 15px;
+        border-radius: 12px;
         overflow: hidden;
     }
     
@@ -345,22 +267,65 @@
         background: #f8f9fa;
     }
     
-    .progress {
-        border-radius: 10px;
+    /* Mobile First Responsive Design */
+    @media (max-width: 576px) {
+        .stats-card .card-body {
+            padding: 1rem 0.75rem;
+        }
+        
+        .stats-card h4 {
+            font-size: 1.5rem;
+        }
+        
+        .stats-card .fa-2x {
+            font-size: 1.5rem;
+        }
+        
+        .card-body {
+            padding: 0.75rem;
+        }
+        
+        .btn-sm {
+            font-size: 0.75rem;
+            padding: 0.25rem 0.5rem;
+        }
     }
     
-    .progress-bar {
-        border-radius: 10px;
-    }
-    
-    /* Responsive adjustments */
     @media (max-width: 768px) {
         .stats-card .card-body {
             padding: 1rem;
         }
         
-        .action-card .card-body {
-            padding: 1rem;
+        .row.g-2 > * {
+            margin-bottom: 0.5rem;
+        }
+        
+        .card-body img {
+            height: 80px !important;
+        }
+    }
+    
+    @media (max-width: 992px) {
+        .col-lg-8, .col-lg-4 {
+            margin-bottom: 1rem;
+        }
+    }
+    
+    /* Tablet and Desktop Optimizations */
+    @media (min-width: 768px) {
+        .stats-card:hover {
+            transform: translateY(-3px);
+        }
+        
+        .card:hover {
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+    }
+    
+    /* Large screens optimization */
+    @media (min-width: 1200px) {
+        .stats-card .card-body {
+            padding: 1.5rem;
         }
     }
 </style>

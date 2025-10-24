@@ -359,3 +359,18 @@ php artisan db:seed --class=KategoriSeeder
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

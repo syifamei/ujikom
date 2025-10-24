@@ -247,6 +247,14 @@
                     <i class="fas fa-arrow-left me-2"></i>cancel
                 </a>
             </div>
+            
+            <div class="text-center mt-3">
+                <small class="text-muted">
+                    <a href="{{ route('home') }}" class="text-decoration-none" style="color: #6c757d;">
+                        Lihat halaman utama
+                    </a>
+                </small>
+            </div>
         </div>
     </div>
 

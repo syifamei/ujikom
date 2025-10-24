@@ -644,6 +644,20 @@
                             Agenda
                         </a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link {{ request()->routeIs('informasi.*') ? 'active' : '' }}" href="{{ route('informasi.index') }}">
+                            <span class="nav-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                    <polyline points="14,2 14,8 20,8"></polyline>
+                                    <line x1="16" y1="13" x2="8" y2="13"></line>
+                                    <line x1="16" y1="17" x2="8" y2="17"></line>
+                                    <polyline points="10,9 9,9 8,9"></polyline>
+                                </svg>
+                            </span>
+                            Informasi
+                        </a>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -663,7 +677,7 @@
                     <p class="mt-3">Website galeri sekolah yang menampilkan berbagai kegiatan, prestasi, dan informasi terkini tentang sekolah kami.</p>
                 </div>
                 <div class="col-md-4">
-                    <h5>Informasi Kontak</h5>
+                    <h5><i class="fas fa-info-circle me-2"></i>Informasi Kontak</h5>
                     <ul class="list-unstyled mt-3">
                         <li><i class="fas fa-map-marker-alt me-2"></i>Jl. Raya Tajur, Muarasari, Bogor Selatan, Kota Bogor, 
                         Jawa Barat, 16137</li>
@@ -672,7 +686,7 @@
                     </ul>
                 </div>
                 <div class="col-md-4">
-                    <h5>Media Sosial</h5>
+                    <h5><i class="fas fa-share-alt me-2"></i>Media Sosial</h5>
                     <div class="mt-3">
                         <a href="https://www.facebook.com/people/SMK-NEGERI-4-KOTA-BOGOR/100054636630766" target="_blank" class="text-white me-3"><i class="fab fa-facebook fa-2x"></i></a>
                         <a href="https://www.instagram.com/smkn4kotabogor/" target="_blank" class="text-white me-3"><i class="fab fa-instagram fa-2x"></i></a>

@@ -13,54 +13,57 @@
                 </h5>
             </div>
             <div class="card-body p-4">
-                <form action="{{ route('admin.informasi.store') }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('admin.informasi.store') }}" method="POST">
                     @csrf
                     
-                    <!-- Two Column Layout -->
-                    <div class="row g-3 mb-4">
-                        <div class="col-md-6">
-                            <label for="judul" class="form-label fw-semibold">
-                                Judul Informasi <span class="text-danger">*</span>
-                            </label>
-                            <input type="text" class="form-control @error('judul') is-invalid @enderror" 
-                                   id="judul" name="judul" value="{{ old('judul') }}" 
-                                   placeholder="Masukkan judul informasi" required>
-                            @error('judul')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-                        <div class="col-md-6">
-                            <label for="gambar" class="form-label fw-semibold">
-                                Foto Informasi
-                            </label>
-                            <input type="file" class="form-control @error('gambar') is-invalid @enderror" 
-                                   id="gambar" name="gambar" accept="image/*">
-                            <div class="form-text">
-                                <i class="fas fa-info-circle me-1"></i>
-                                Format: JPG, PNG, GIF. Maksimal 2MB
-                            </div>
-                            @error('gambar')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
+                    <!-- Judul -->
+                    <div class="mb-4">
+                        <label for="judul" class="form-label fw-semibold">
+                            Judul Informasi <span class="text-danger">*</span>
+                        </label>
+                        <input type="text" class="form-control @error('judul') is-invalid @enderror" 
+                               id="judul" name="judul" value="{{ old('judul') }}" 
+                               placeholder="Masukkan judul informasi" required>
+                        @error('judul')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
                     
-                    <div class="row g-3 mb-4">
-                        <div class="col-12">
-                            <label for="deskripsi" class="form-label fw-semibold">
-                                Deskripsi <span class="text-danger">*</span>
-                            </label>
-                            <textarea class="form-control @error('deskripsi') is-invalid @enderror" 
-                                      id="deskripsi" name="deskripsi" rows="3" 
-                                      placeholder="Masukkan deskripsi informasi" required>{{ old('deskripsi') }}</textarea>
-                            <div class="form-text">
-                                <i class="fas fa-info-circle me-1"></i>
-                                Maksimal 500 karakter
-                            </div>
-                            @error('deskripsi')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
+                    <!-- Deskripsi -->
+                    <div class="mb-4">
+                        <label for="deskripsi" class="form-label fw-semibold">
+                            Deskripsi <span class="text-danger">*</span>
+                        </label>
+                        <textarea class="form-control @error('deskripsi') is-invalid @enderror" 
+                                  id="deskripsi" name="deskripsi" rows="4" 
+                                  placeholder="Masukkan deskripsi informasi" required>{{ old('deskripsi') }}</textarea>
+                        <div class="form-text">
+                            <i class="fas fa-info-circle me-1"></i>
+                            Maksimal 1000 karakter
                         </div>
+                        @error('deskripsi')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+                    
+                    <!-- Status -->
+                    <div class="mb-4">
+                        <label for="status" class="form-label fw-semibold">
+                            Status <span class="text-danger">*</span>
+                        </label>
+                        <select class="form-select @error('status') is-invalid @enderror" 
+                                id="status" name="status" required>
+                            <option value="">Pilih Status</option>
+                            <option value="Aktif" {{ old('status') == 'Aktif' ? 'selected' : '' }}>Aktif</option>
+                            <option value="Nonaktif" {{ old('status') == 'Nonaktif' ? 'selected' : '' }}>Nonaktif</option>
+                        </select>
+                        <div class="form-text">
+                            <i class="fas fa-info-circle me-1"></i>
+                            Pilih status untuk menampilkan atau menyembunyikan informasi
+                        </div>
+                        @error('status')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
 
                     <!-- Action Buttons -->

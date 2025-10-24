@@ -13,9 +13,17 @@ use App\Http\Controllers\PetugasController;
 use App\Http\Controllers\InformasiController;
 use App\Http\Controllers\AgendaController;
 use App\Http\Controllers\Admin\FotoController as AdminFotoController;
+use App\Http\Controllers\LikeController;
+use App\Http\Controllers\CommentController;
+use App\Http\Controllers\DownloadController;
 
 // Public Routes
 Route::get('/', [HomeController::class, 'index'])->name('home');
+
+// Gallery Interaction Routes
+Route::post('/galeri/like', [GaleriInteraksiController::class, 'like'])->name('galeri.like');
+Route::post('/galeri/komentar', [GaleriInteraksiController::class, 'komentar'])->name('galeri.komentar');
+Route::get('/galeri/download/{id}', [GaleriInteraksiController::class, 'download'])->name('galeri.download');
 Route::get('/profil', [HomeController::class, 'profil'])->name('profil');
 Route::get('/galeri', [GaleriController::class, 'index'])->name('galeri');
 // Gated download routes for public gallery
@@ -27,6 +35,12 @@ Route::post('/galeri/{foto}/like', [GaleriController::class, 'like'])->name('gal
 Route::get('/galeri/{foto}/comments', [GaleriController::class, 'comments'])->name('galeri.comments');
 Route::post('/galeri/comment/{foto}', [GaleriController::class, 'addComment'])->name('galeri.comment');
 Route::post('/galeri/download/{foto}', [GaleriController::class, 'trackDownload'])->name('galeri.download.track');
+
+// API Routes for Interactive Features (route model binding)
+Route::post('/api/foto/{foto}/like', [LikeController::class, 'store'])->name('foto.like');
+Route::post('/api/foto/{foto}/comment', [CommentController::class, 'store'])->name('foto.comment');
+Route::get('/api/foto/{foto}/comments/approved', [CommentController::class, 'getApprovedComments'])->name('foto.comments.approved');
+Route::post('/api/foto/{foto}/download', [DownloadController::class, 'registerAndDownload'])->name('foto.download');
 
 // Aliases for "/gallery" path (English URL)
 Route::get('/gallery', [GaleriController::class, 'index'])->name('gallery');

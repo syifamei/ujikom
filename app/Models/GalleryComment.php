@@ -20,44 +20,10 @@ class GalleryComment extends Model
     ];
 
     /**
-     * Get the user who made this comment
+     * Get the gallery that owns the comment
      */
-    public function user(): BelongsTo
+    public function gallery()
     {
-        return $this->belongsTo(User::class);
-    }
-
-    /**
-     * Get the gallery item
-     */
-    public function galleryItem(): BelongsTo
-    {
-        return $this->belongsTo(GalleryItem::class);
-    }
-
-    /**
-     * Scope for approved comments
-     */
-    public function scopeApproved($query)
-    {
-        return $query->where('status', 'approved');
-    }
-
-    /**
-     * Scope for pending comments
-     */
-    public function scopePending($query)
-    {
-        return $query->where('status', 'pending');
-    }
-
-    /**
-     * Get commenter name
-     */
-    public function getCommenterNameAttribute(): string
-    {
-        return $this->user ? $this->user->name : $this->name;
+        return $this->belongsTo(Gallery::class, 'gallery_item_id');
     }
 }
-
-

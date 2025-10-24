@@ -1,0 +1,701 @@
+@extends('layouts.app')
+
+@section('styles')
+<link href="https://cdn.jsdelivr.net/npm/lightbox2@2.11.3/dist/css/lightbox.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+<style>
+/* Base Styles */
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f8f9fa;
+    color: #333;
+}
+
+/* Container */
+.galeri-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+}
+
+/* Page Title */
+.page-title {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.page-title h1 {
+    font-size: 2.2rem;
+    color: #2c3e50;
+    margin-bottom: 0.5rem;
+}
+
+.page-title p {
+    color: #7f8c8d;
+    font-size: 1.1rem;
+}
+
+/* Gallery Grid */
+.gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    margin-top: 2rem;
+}
+
+/* Gallery Card */
+.gallery-card {
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+}
+
+.gallery-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+/* Image Container */
+.gallery-image-container {
+    position: relative;
+    width: 100%;
+    height: 200px;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.gallery-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.gallery-card:hover .gallery-image {
+    transform: scale(1.05);
+}
+
+/* Image Overlay */
+.image-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(transparent, rgba(0,0,0,0.7));
+    padding: 1rem;
+    color: white;
+    transform: translateY(100%);
+    transition: transform 0.3s ease;
+}
+
+.gallery-card:hover .image-overlay {
+    transform: translateY(0);
+}
+
+/* Gallery Info */
+.gallery-info {
+    padding: 1.25rem;
+}
+
+.gallery-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: #2d3748;
+}
+
+.gallery-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 0.75rem;
+    font-size: 0.875rem;
+    color: #718096;
+}
+
+/* Action Buttons */
+.gallery-actions {
+    display: flex;
+    gap: 0.75rem;
+}
+
+.action-btn {
+    background: none;
+    border: none;
+    color: #718096;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: 0.875rem;
+    transition: all 0.2s;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+}
+
+.action-btn:hover {
+    background: rgba(0,0,0,0.05);
+    color: #4a5568;
+}
+
+.action-btn.liked {
+    color: #e53e3e;
+}
+
+/* Modal Styles */
+.modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.8);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+}
+
+.modal-content {
+    background: white;
+    border-radius: 12px;
+    max-width: 900px;
+    width: 100%;
+    max-height: 90vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+.modal-close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: rgba(255, 255, 255, 0.9);
+    border: none;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #4a5568;
+    z-index: 10;
+    transition: all 0.2s;
+}
+
+.modal-close:hover {
+    background: #e2e8f0;
+}
+
+.modal-image-container {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+    background: #f8f9fa;
+}
+
+.modal-image {
+    max-height: 100%;
+    max-width: 100%;
+    object-fit: contain;
+}
+
+.modal-details {
+    padding: 1.5rem;
+    border-top: 1px solid #e2e8f0;
+}
+
+/* Download Modal */
+.download-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1001;
+    justify-content: center;
+    align-items: center;
+}
+
+.download-modal-content {
+    background: white;
+    border-radius: 12px;
+    width: 100%;
+    max-width: 500px;
+    padding: 2rem;
+    position: relative;
+}
+
+.download-close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #4a5568;
+}
+
+/* Form Styles */
+.form-group {
+    margin-bottom: 1.25rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+}
+
+.form-control {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.2s;
+}
+
+.form-control:focus {
+    border-color: #4f46e5;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+}
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: none;
+}
+
+.btn-primary {
+    background-color: #4f46e5;
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: #4338ca;
+}
+
+.btn-outline-primary {
+    background: transparent;
+    border: 1px solid #4f46e5;
+    color: #4f46e5;
+}
+
+.btn-outline-primary:hover {
+    background: #4f46e5;
+    color: white;
+}
+
+.btn-block {
+    width: 100%;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 992px) {
+    .gallery-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 576px) {
+    .gallery-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .page-title h1 {
+        font-size: 1.8rem;
+    }
+    
+    .gallery-actions {
+        justify-content: center;
+    }
+}
+</style>
+@endsection
+
+@section('content')
+<div class="galeri-container">
+    <div class="page-title">
+        <h1>Galeri Foto</h1>
+        <p>Koleksi momen berharga dari kegiatan sekolah kami</p>
+    </div>
+    
+    <!-- Category Filter -->
+    <div class="mb-4">
+        <div class="d-flex flex-wrap gap-2 justify-content-center">
+            <a href="{{ route('galeri') }}" class="btn btn-outline-primary {{ !request('kategori') ? 'active' : '' }}">
+                Semua Kategori
+            </a>
+            @foreach($kategoris as $kategori)
+                @php
+                    $kategoriSlug = strtolower(str_replace([' ', '&'], ['', ''], $kategori->nama));
+                @endphp
+                <a href="{{ route('galeri', ['kategori' => $kategoriSlug]) }}" 
+                   class="btn btn-outline-primary {{ request('kategori') === $kategoriSlug ? 'active' : '' }}">
+                    {{ $kategori->nama }}
+                </a>
+            @endforeach
+        </div>
+    </div>
+    
+    <!-- Gallery Grid -->
+    <div class="gallery-grid">
+        @forelse($fotos as $foto)
+            <div class="gallery-card">
+                <div class="gallery-image-container" onclick="openModal('{{ $foto->id }}')">
+                    <img src="{{ Storage::url($foto->lokasi_file) }}" alt="{{ $foto->judul }}" class="gallery-image">
+                    <div class="image-overlay">
+                        <h3 class="gallery-title text-white">{{ $foto->judul }}</h3>
+                        <p class="text-white-50 mb-0">{{ $foto->created_at->format('d M Y') }}</p>
+                    </div>
+                </div>
+                <div class="gallery-info">
+                    <div class="gallery-meta">
+                        <span class="gallery-date">{{ $foto->created_at->format('d M Y') }}</span>
+                        <div class="gallery-actions">
+                            <button class="action-btn like-btn" data-foto-id="{{ $foto->id }}" onclick="toggleLike('{{ $foto->id }}', this, event)">
+                                <i class="far fa-heart"></i>
+                                <span class="like-count">{{ $foto->likes_count ?? 0 }}</span>
+                            </button>
+                            <button class="action-btn comment-btn" data-foto-id="{{ $foto->id }}" onclick="openModal('{{ $foto->id }}', event)">
+                                <i class="far fa-comment"></i>
+                                <span class="comment-count">{{ $foto->comments_count ?? 0 }}</span>
+                            </button>
+                            <button class="action-btn download-btn" data-foto-id="{{ $foto->id }}" onclick="showDownloadModal('{{ $foto->id }}', event)">
+                                <i class="fas fa-download"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @empty
+            <div class="col-12 text-center py-5">
+                <div class="empty-state">
+                    <i class="far fa-images fa-4x mb-3 text-muted"></i>
+                    <h4>Belum ada foto yang tersedia</h4>
+                    <p class="text-muted">Silakan kunjungi kembali nanti untuk melihat foto-foto terbaru.</p>
+                </div>
+            </div>
+        @endforelse
+    </div>
+    
+    @if($fotos->hasPages())
+        <div class="mt-5">
+            {{ $fotos->links() }}
+        </div>
+    @endif
+</div>
+
+<!-- Image Modal -->
+<div id="imageModal" class="modal-overlay">
+    <button class="modal-close" onclick="closeModal()">&times;</button>
+    <div class="modal-content">
+        <div class="modal-image-container">
+            <img id="modalImage" src="" alt="" class="modal-image">
+        </div>
+        <div class="modal-details">
+            <h2 id="modalTitle"></h2>
+            <p id="modalDate" class="text-muted"></p>
+            
+            <div class="d-flex gap-3 mb-3">
+                <button class="btn btn-outline-primary" id="modalLikeBtn">
+                    <i class="far fa-heart"></i> <span id="modalLikeCount">0</span>
+                </button>
+                <button class="btn btn-outline-primary" id="modalCommentBtn">
+                    <i class="far fa-comment"></i> <span id="modalCommentCount">0</span>
+                </button>
+                <button class="btn btn-outline-success download-modal-btn">
+                    <i class="fas fa-download"></i> Unduh
+                </button>
+            </div>
+            
+            <div class="comments-section">
+                <h5>Komentar</h5>
+                <div id="commentsList" class="mb-3">
+                    <p class="text-muted">Memuat komentar...</p>
+                </div>
+                <form id="commentForm" class="mt-3">
+                    <div class="input-group">
+                        <input type="text" id="commentText" class="form-control" placeholder="Tulis komentar..." required>
+                        <button class="btn btn-primary" type="submit">Kirim</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Download Modal -->
+<div id="downloadModal" class="download-modal">
+    <div class="download-modal-content">
+        <button class="download-close" onclick="closeDownloadModal()">&times;</button>
+        <h3 class="mb-3">Unduh Foto</h3>
+        <p class="text-muted mb-4">Silakan isi data diri Anda untuk mengunduh foto.</p>
+        <form id="downloadForm">
+            <input type="hidden" id="fotoId" name="foto_id">
+            <div class="form-group">
+                <label for="name">Nama Lengkap</label>
+                <input type="text" id="name" name="name" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" class="form-control" required minlength="8">
+                <small class="text-muted">Minimal 8 karakter</small>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">
+                <i class="fas fa-download me-2"></i> Daftar & Unduh
+            </button>
+        </form>
+    </div>
+</div>
+@endsection
+
+@push('scripts')
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+let currentFotoId = null;
+
+// Open modal with image
+function openModal(fotoId, event) {
+    if (event) event.stopPropagation();
+    
+    const fotoCard = document.querySelector(`[data-foto-id="${fotoId}"]`).closest('.gallery-card');
+    const imgSrc = fotoCard.querySelector('img').src;
+    const title = fotoCard.querySelector('.gallery-title').textContent;
+    const date = fotoCard.querySelector('.gallery-date').textContent;
+    const likeCount = fotoCard.querySelector('.like-count').textContent;
+    const commentCount = fotoCard.querySelector('.comment-count').textContent;
+    
+    currentFotoId = fotoId;
+    document.getElementById('modalImage').src = imgSrc;
+    document.getElementById('modalTitle').textContent = title;
+    document.getElementById('modalDate').textContent = date;
+    document.getElementById('modalLikeCount').textContent = likeCount;
+    document.getElementById('modalCommentCount').textContent = commentCount;
+    document.getElementById('fotoId').value = fotoId;
+    
+    // Update modal like button state
+    const likeBtn = fotoCard.querySelector('.like-btn');
+    const modalLikeBtn = document.querySelector('#modalLikeBtn');
+    if (likeBtn && modalLikeBtn) {
+        const isLiked = likeBtn.querySelector('i').classList.contains('fas');
+        const likeIcon = modalLikeBtn.querySelector('i');
+        likeIcon.className = isLiked ? 'fas fa-heart text-danger' : 'far fa-heart';
+    }
+    
+    // Load comments
+    loadComments(fotoId);
+    
+    // Show modal
+    document.getElementById('imageModal').style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+}
+
+// Close modal
+function closeModal() {
+    document.getElementById('imageModal').style.display = 'none';
+    document.body.style.overflow = 'auto';
+}
+
+// Close download modal
+function closeDownloadModal() {
+    document.getElementById('downloadModal').style.display = 'none';
+    document.body.style.overflow = 'auto';
+}
+
+// Load comments for a photo
+function loadComments(fotoId) {
+    const commentsList = document.getElementById('commentsList');
+    commentsList.innerHTML = '<p class="text-muted">Memuat komentar...</p>';
+    
+    // In a real app, you would fetch comments from your API here
+    // For now, we'll simulate a delay and show a message
+    setTimeout(() => {
+        commentsList.innerHTML = `
+            <div class="text-center text-muted py-4">
+                <i class="fas fa-comment-slash fa-2x mb-2"></i>
+                <p>Belum ada komentar</p>
+            </div>
+        `;
+    }, 500);
+}
+
+// Toggle like
+function toggleLike(fotoId, button, event) {
+    if (event) event.stopPropagation();
+    
+    const likeIcon = button.querySelector('i');
+    const likeCount = button.querySelector('.like-count');
+    const isLiked = likeIcon.classList.contains('fas');
+    
+    // Toggle like icon
+    if (isLiked) {
+        likeIcon.classList.remove('fas', 'text-danger');
+        likeIcon.classList.add('far');
+        likeCount.textContent = parseInt(likeCount.textContent) - 1;
+    } else {
+        likeIcon.classList.remove('far');
+        likeIcon.classList.add('fas', 'text-danger');
+        likeCount.textContent = parseInt(likeCount.textContent) + 1;
+    }
+    
+    // In a real app, you would make an API call here
+    console.log(`Photo ${fotoId} ${!isLiked ? 'liked' : 'unliked'}`);
+    
+    // Update modal like button if open
+    updateModalLikeButton(fotoId, !isLiked);
+}
+
+// Update modal like button
+function updateModalLikeButton(fotoId, isLiked) {
+    const modalLikeBtn = document.querySelector('#modalLikeBtn');
+    if (modalLikeBtn) {
+        const likeIcon = modalLikeBtn.querySelector('i');
+        const likeCount = modalLikeBtn.querySelector('#modalLikeCount');
+        
+        if (isLiked) {
+            likeIcon.classList.remove('far');
+            likeIcon.classList.add('fas', 'text-danger');
+            likeCount.textContent = parseInt(likeCount.textContent) + 1;
+        } else {
+            likeIcon.classList.remove('fas', 'text-danger');
+            likeIcon.classList.add('far');
+            likeCount.textContent = Math.max(0, parseInt(likeCount.textContent) - 1);
+        }
+    }
+}
+
+// Show download modal
+function showDownloadModal(fotoId, event) {
+    if (event) event.stopPropagation();
+    document.getElementById('fotoId').value = fotoId;
+    document.getElementById('downloadModal').style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+    
+    // Close image modal if open
+    const imageModal = document.getElementById('imageModal');
+    if (imageModal && imageModal.style.display === 'flex') {
+        imageModal.style.display = 'none';
+    }
+}
+
+// Event listeners when the DOM is loaded
+document.addEventListener('DOMContentLoaded', function() {
+    // Handle modal like button click
+    document.getElementById('modalLikeBtn')?.addEventListener('click', function(e) {
+        const fotoId = currentFotoId;
+        if (!fotoId) return;
+        
+        const likeIcon = this.querySelector('i');
+        const isLiked = likeIcon.classList.contains('fas');
+        
+        // Toggle like
+        toggleLike(fotoId, this, e);
+        
+        // Update the card's like button if visible
+        const cardLikeBtn = document.querySelector(`.like-btn[data-foto-id="${fotoId}"]`);
+        if (cardLikeBtn) {
+            const cardLikeIcon = cardLikeBtn.querySelector('i');
+            const cardLikeCount = cardLikeBtn.querySelector('.like-count');
+            
+            if (isLiked) {
+                cardLikeIcon.classList.remove('fas', 'text-danger');
+                cardLikeIcon.classList.add('far');
+                cardLikeCount.textContent = Math.max(0, parseInt(cardLikeCount.textContent) - 1);
+            } else {
+                cardLikeIcon.classList.remove('far');
+                cardLikeIcon.classList.add('fas', 'text-danger');
+                cardLikeCount.textContent = parseInt(cardLikeCount.textContent) + 1;
+            }
+        }
+    });
+
+    // Handle modal comment button click
+    document.getElementById('modalCommentBtn')?.addEventListener('click', function() {
+        document.getElementById('commentText')?.focus();
+    });
+
+    // Handle download button in modal
+    document.querySelector('.download-modal-btn')?.addEventListener('click', function(e) {
+        e.stopPropagation();
+        showDownloadModal(currentFotoId, e);
+    });
+    
+    // Handle comment form submission
+    document.getElementById('commentForm')?.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const commentText = document.getElementById('commentText').value.trim();
+        if (!commentText || !currentFotoId) return;
+        
+        // In a real app, you would make an API call here
+        console.log(`New comment for photo ${currentFotoId}: ${commentText}`);
+        
+        // Clear the form
+        this.reset();
+        
+        // Show success message
+        alert('Komentar berhasil dikirim!');
+    });
+    
+    // Handle download form submission
+    document.getElementById('downloadForm')?.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const formData = new FormData(this);
+        const fotoId = formData.get('foto_id');
+        
+        // In a real app, you would make an API call to register the user
+        console.log(`Download requested for photo ${fotoId}`);
+        
+        // Close the modal
+        closeDownloadModal();
+        
+        // Show success message
+        alert('Terima kasih! File download akan segera dimulai.');
+    });
+    
+    // Close modals when clicking outside
+    window.addEventListener('click', function(e) {
+        if (e.target.classList.contains('modal-overlay')) {
+            closeModal();
+        }
+        if (e.target.classList.contains('download-modal')) {
+            closeDownloadModal();
+        }
+    });
+    
+    // Close modals when pressing Escape key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            closeModal();
+            closeDownloadModal();
+        }
+    });
+});
+</script>
+@endpush

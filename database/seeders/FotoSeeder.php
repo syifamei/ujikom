@@ -118,3 +118,18 @@ class FotoSeeder extends Seeder
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

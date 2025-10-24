@@ -4,17 +4,25 @@ namespace App\Http\Controllers;
 
 use App\Models\Agenda;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Auth;
 
 class AgendaController extends Controller
 {
-    // ADMIN CRUD
     public function index()
     {
-        $agendas = Agenda::latest()->paginate(12);
+        $agendas = Agenda::orderBy('scheduled_at', 'desc')
+            ->paginate(10);
+
         return view('admin.agenda.index', compact('agendas'));
+    }
+
+    public function publicIndex()
+    {
+        $agendas = Agenda::where('status', 'Aktif')
+            ->orderBy('scheduled_at', 'desc')
+            ->paginate(12);
+
+        return view('agenda.index', compact('agendas'));
     }
 
     public function create()
@@ -25,100 +33,152 @@ class AgendaController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'description' => 'required|string',
-            'photo' => 'nullable|image|max:2048',
+            'judul' => 'required|string|max:255',
+            'deskripsi' => 'required|string|max:1000',
+            'tanggal' => 'required|date',
+            'waktu' => 'nullable|string|max:50',
+            'lokasi' => 'nullable|string|max:255',
+            'status' => 'required|in:Aktif,Nonaktif'
         ]);
 
-        $photoPath = null;
-        if ($request->hasFile('photo')) {
-            $photoPath = $request->file('photo')->store('agenda', 'public');
+        // Cari user admin atau buat default
+        $admin = \App\Models\User::first();
+        if (!$admin) {
+            $admin = \App\Models\User::create([
+                'name' => 'Admin',
+                'email' => 'admin@smkn4bogor.sch.id',
+                'password' => bcrypt('password'),
+            ]);
         }
 
-        $requestedStatus = $request->input('status', 'Aktif');
+        // Combine tanggal and waktu into scheduled_at
+        $scheduledAt = $request->tanggal;
+        if ($request->waktu) {
+            $scheduledAt .= ' ' . $request->waktu;
+        }
 
-        $data = [
-            'description' => $request->description,
-            'photo_path' => $photoPath,
-            'status' => $requestedStatus,
-        ];
-        if (Schema::hasColumn('agendas', 'title')) {
-            $generatedTitle = trim(Str::limit(strip_tags($request->description), 60, '')) ?: 'Agenda';
-            $data['title'] = $generatedTitle;
-        }
-        if (Schema::hasColumn('agendas', 'judul')) {
-            $generatedTitle = trim(Str::limit(strip_tags($request->description), 60, '')) ?: 'Agenda';
-            $data['judul'] = $generatedTitle;
-        }
-        if (Schema::hasColumn('agendas', 'scheduled_at')) {
-            $data['scheduled_at'] = now();
-        }
-        if (Schema::hasColumn('agendas', 'deskripsi')) {
-            $data['deskripsi'] = $request->description;
-        }
+            $data = [
+                'title' => $request->judul,
+                'description' => $request->deskripsi,
+                'scheduled_at' => $scheduledAt,
+                'status' => $request->status
+            ];
 
         Agenda::create($data);
 
-        return redirect()->route('admin.agenda.index')->with('success', 'Agenda ditambahkan');
+        return redirect()->route('admin.agenda.index')
+            ->with('success', 'Agenda berhasil ditambahkan!');
     }
 
-    public function edit(Agenda $agenda)
+    public function show($id)
     {
-        return view('admin.agenda.edit', compact('agenda'));
-    }
-
-    public function update(Request $request, Agenda $agenda)
-    {
-        $request->validate([
-            'description' => 'required|string',
-            'photo' => 'nullable|image|max:2048',
-            'status' => 'required|in:Aktif,Nonaktif',
-        ]);
-
-        $data = $request->only('description','status');
-        // keep status as provided ('Aktif' or 'Nonaktif')
-        if (Schema::hasColumn('agendas', 'title')) {
-            $generatedTitle = trim(Str::limit(strip_tags($request->description), 60, '')) ?: 'Agenda';
-            $data['title'] = $generatedTitle;
-        }
-        if (Schema::hasColumn('agendas', 'judul')) {
-            $generatedTitle = trim(Str::limit(strip_tags($request->description), 60, '')) ?: 'Agenda';
-            $data['judul'] = $generatedTitle;
-        }
-        if (Schema::hasColumn('agendas', 'deskripsi')) {
-            $data['deskripsi'] = $request->description;
-        }
-        if ($request->hasFile('photo')) {
-            if ($agenda->photo_path) {
-                Storage::disk('public')->delete($agenda->photo_path);
+        try {
+            $agenda = Agenda::findOrFail($id);
+            
+            // Check if request expects JSON response (AJAX)
+            if (request()->expectsJson() || request()->ajax() || request()->header('X-Requested-With') === 'XMLHttpRequest') {
+                return response()->json([
+                    'success' => true,
+                    'data' => $agenda
+                ]);
             }
-            $data['photo_path'] = $request->file('photo')->store('agenda', 'public');
+            
+            return view('admin.agenda.show', compact('agenda'));
+        } catch (\Exception $e) {
+            // Check if request expects JSON response (AJAX)
+            if (request()->expectsJson() || request()->ajax() || request()->header('X-Requested-With') === 'XMLHttpRequest') {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Agenda tidak ditemukan!'
+                ], 404);
+            }
+            
+            return redirect()->route('admin.agenda.index')
+                ->with('error', 'Agenda tidak ditemukan!');
         }
-
-        $agenda->update($data);
-        return redirect()->route('admin.agenda.index')->with('success', 'Agenda diperbarui');
-    }
-
-    public function destroy(Agenda $agenda)
-    {
-        if ($agenda->photo_path) {
-            Storage::disk('public')->delete($agenda->photo_path);
-        }
-        $agenda->delete();
-        return back()->with('success', 'Agenda dihapus');
-    }
-
-    // PUBLIC
-    public function publicIndex()
-    {
-        $agendas = Agenda::where('status','Aktif')->latest()->paginate(12);
-        return view('agenda.index', compact('agendas'));
     }
 
     public function publicShow(Agenda $agenda)
     {
-        abort_unless($agenda->status === 'Aktif', 404);
         return view('agenda.show', compact('agenda'));
     }
+
+    public function edit($id)
+    {
+        try {
+            $agenda = Agenda::findOrFail($id);
+            return view('admin.agenda.edit', compact('agenda'));
+        } catch (\Exception $e) {
+            return redirect()->route('admin.agenda.index')
+                ->with('error', 'Agenda tidak ditemukan!');
+        }
+    }
+
+    public function update(Request $request, $id)
+    {
+        try {
+            $agenda = Agenda::findOrFail($id);
+            
+            $request->validate([
+                'judul' => 'required|string|max:255',
+                'deskripsi' => 'required|string|max:1000',
+                'tanggal' => 'required|date',
+                'waktu' => 'nullable|string|max:50',
+                'lokasi' => 'nullable|string|max:255',
+                'status' => 'required|in:Aktif,Nonaktif'
+            ]);
+
+            // Combine tanggal and waktu into scheduled_at
+            $scheduledAt = $request->tanggal;
+            if ($request->waktu) {
+                $scheduledAt .= ' ' . $request->waktu;
+            }
+
+            $data = [
+                'title' => $request->judul,
+                'description' => $request->deskripsi,
+                'scheduled_at' => $scheduledAt,
+                'status' => $request->status
+            ];
+
+            $agenda->update($data);
+
+            // Check if request expects JSON response (AJAX)
+            if ($request->expectsJson() || $request->ajax() || $request->header('X-Requested-With') === 'XMLHttpRequest') {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Agenda berhasil diperbarui!',
+                    'data' => $agenda->fresh()
+                ]);
+            }
+
+            return redirect()->route('admin.agenda.index')
+                ->with('success', 'Agenda berhasil diperbarui!');
+        } catch (\Exception $e) {
+            // Check if request expects JSON response (AJAX)
+            if ($request->expectsJson() || $request->ajax() || $request->header('X-Requested-With') === 'XMLHttpRequest') {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Gagal memperbarui agenda: ' . $e->getMessage()
+                ], 500);
+            }
+
+            return redirect()->route('admin.agenda.index')
+                ->with('error', 'Gagal memperbarui agenda!');
+        }
+    }
+
+    public function destroy($id)
+    {
+        try {
+            $agenda = Agenda::findOrFail($id);
+            $agenda->delete();
+
+            return redirect()->route('admin.agenda.index')
+                ->with('success', 'Agenda berhasil dihapus!');
+        } catch (\Exception $e) {
+            return redirect()->route('admin.agenda.index')
+                ->with('error', 'Gagal menghapus agenda!');
+        }
+    }
 }
-
-

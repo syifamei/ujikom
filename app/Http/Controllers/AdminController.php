@@ -178,8 +178,8 @@ class AdminController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        // After admin logout, go to user homepage
-        return redirect('/');
+        // After admin logout, go to admin login page
+        return redirect()->route('admin.login');
     }
 
     public function profile()
