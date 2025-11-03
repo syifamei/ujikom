@@ -4,19 +4,10 @@
 
 @section('content')
 <div class="container py-5">
-    <!-- Header Section -->
-    <div class="info-header-section mb-5">
-        <div class="info-header-content">
-            <div class="info-header-left">
-                <div class="info-header-icon">
-                    <i class="fas fa-calendar-day"></i>
-                </div>
-                <div class="info-header-text">
-                    <h1 class="info-header-title">Agenda Sekolah</h1>
-                    <p class="info-header-subtitle">Jadwal dan informasi kegiatan terbaru SMKN 4 Bogor</p>
-                </div>
-            </div>
-        </div>
+    <!-- Header -->
+    <div class="page-header">
+        <h1 class="page-title">Agenda Sekolah</h1>
+        <p class="page-subtitle">Jadwal dan informasi kegiatan terbaru SMKN 4 Bogor</p>
     </div>
 
     @if($agendas->count() > 0)
@@ -56,9 +47,6 @@
                             <a href="{{ route('agenda.show', $agenda) }}" class="btn btn-sm btn-outline-primary">
                                 Selengkapnya <i class="fas fa-arrow-right ms-1"></i>
                             </a>
-                            <span class="text-muted small">
-                                <i class="far fa-eye me-1"></i> {{ $agenda->views ?? 0 }}
-                            </span>
                         </div>
                     </div>
                 </div>
@@ -83,44 +71,22 @@
 
 @section('styles')
 <style>
-    /* Header Styles */
-    .info-header-section {
-        background: linear-gradient(135deg, #4e54c8, #8f94fb);
-        border-radius: 16px;
-        padding: 2rem;
-        margin-bottom: 2.5rem;
-        color: white;
-        box-shadow: 0 10px 30px rgba(78, 84, 200, 0.15);
+    /* Page Header */
+    .page-header {
+        text-align: center;
+        margin-bottom: 40px;
     }
 
-    .info-header-icon {
-        width: 60px;
-        height: 60px;
-        border-radius: 16px;
-        background: rgba(255, 255, 255, 0.15);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin-right: 1.5rem;
+    .page-title {
+        font-size: 2rem !important;
+        font-weight: 700 !important;
+        color: #1f2937 !important;
+        margin-bottom: 10px !important;
     }
 
-    .info-header-icon i {
-        font-size: 1.75rem;
-        color: white;
-    }
-
-    .info-header-title {
-        font-size: 2rem;
-        font-weight: 700;
-        margin: 0 0 0.5rem 0;
-        color: white;
-    }
-
-    .info-header-subtitle {
-        color: rgba(255, 255, 255, 0.9);
-        margin: 0;
-        font-size: 1.1rem;
-        font-weight: 400;
+    .page-subtitle {
+        font-size: 1rem !important;
+        color: #6b7280 !important;
     }
 
     /* Card Styles */

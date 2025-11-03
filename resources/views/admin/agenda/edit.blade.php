@@ -13,18 +13,18 @@
                 </h5>
             </div>
             <div class="card-body p-4">
-                <form action="{{ route('admin.agenda.update', $agenda->id) }}" method="POST">
+                <form action="{{ route('admin.agenda.update', $agenda->id) }}" method="POST" novalidate>
                     @csrf
                     @method('PUT')
                     
                     <!-- Judul -->
                     <div class="mb-4">
                         <label for="judul" class="form-label fw-semibold">
-                            Judul Agenda <span class="text-danger">*</span>
+                            Judul Agenda
                         </label>
                         <input type="text" class="form-control @error('judul') is-invalid @enderror" 
                                id="judul" name="judul" value="{{ old('judul', $agenda->title) }}" 
-                               placeholder="Masukkan judul agenda" required>
+                               placeholder="Masukkan judul agenda">
                         @error('judul')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
@@ -33,11 +33,11 @@
                     <!-- Deskripsi -->
                     <div class="mb-4">
                         <label for="deskripsi" class="form-label fw-semibold">
-                            Deskripsi <span class="text-danger">*</span>
+                            Deskripsi
                         </label>
                         <textarea class="form-control @error('deskripsi') is-invalid @enderror" 
                                   id="deskripsi" name="deskripsi" rows="4" 
-                                  placeholder="Masukkan deskripsi agenda" required>{{ old('deskripsi', $agenda->description) }}</textarea>
+                                  placeholder="Masukkan deskripsi agenda">{{ old('deskripsi', $agenda->description) }}</textarea>
                         <div class="form-text">
                             <i class="fas fa-info-circle me-1"></i>
                             Maksimal 1000 karakter
@@ -51,10 +51,10 @@
                     <div class="row g-3 mb-4">
                         <div class="col-md-6">
                             <label for="tanggal" class="form-label fw-semibold">
-                                Tanggal <span class="text-danger">*</span>
+                                Tanggal
                             </label>
                             <input type="date" class="form-control @error('tanggal') is-invalid @enderror" 
-                                   id="tanggal" name="tanggal" value="{{ old('tanggal', $agenda->scheduled_at ? $agenda->scheduled_at->format('Y-m-d') : '') }}" required>
+                                   id="tanggal" name="tanggal" value="{{ old('tanggal', $agenda->scheduled_at ? $agenda->scheduled_at->format('Y-m-d') : '') }}">
                             @error('tanggal')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -96,10 +96,10 @@
                     <!-- Status -->
                     <div class="mb-4">
                         <label for="status" class="form-label fw-semibold">
-                            Status <span class="text-danger">*</span>
+                            Status
                         </label>
                         <select class="form-select @error('status') is-invalid @enderror" 
-                                id="status" name="status" required>
+                                id="status" name="status">
                             <option value="">Pilih Status</option>
                             <option value="Aktif" {{ old('status', $agenda->status) == 'Aktif' ? 'selected' : '' }}>Aktif</option>
                             <option value="Nonaktif" {{ old('status', $agenda->status) == 'Nonaktif' ? 'selected' : '' }}>Nonaktif</option>

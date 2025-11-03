@@ -20,15 +20,12 @@ use App\Http\Controllers\DownloadController;
 // Public Routes
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
-// Gallery Interaction Routes
-Route::post('/galeri/like', [GaleriInteraksiController::class, 'like'])->name('galeri.like');
-Route::post('/galeri/komentar', [GaleriInteraksiController::class, 'komentar'])->name('galeri.komentar');
-Route::get('/galeri/download/{id}', [GaleriInteraksiController::class, 'download'])->name('galeri.download');
 Route::get('/profil', [HomeController::class, 'profil'])->name('profil');
 Route::get('/galeri', [GaleriController::class, 'index'])->name('galeri');
-// Gated download routes for public gallery
-Route::post('/galeri/download/auth', [GaleriController::class, 'authDownload'])->name('galeri.download.auth');
-Route::get('/galeri/download/{id}', [GaleriController::class, 'download'])->name('galeri.download');
+
+// Like and Download routes with auth check (NEW)
+Route::post('/galeri/like/{id}', [GaleriController::class, 'likePhoto'])->name('galeri.like.photo');
+Route::get('/galeri/download/{id}', [GaleriController::class, 'downloadPhoto'])->name('galeri.download');
 
 // Like, Comment, and Download routes for gallery
 Route::post('/galeri/{foto}/like', [GaleriController::class, 'like'])->name('galeri.like');
@@ -53,18 +50,28 @@ Route::get('/kontak', function () {
     return view('kontak', compact('profile'));
 })->name('kontak');
 
-// Public Informasi Routes
-Route::get('/informasi', [InformasiController::class, 'publicIndex'])->name('informasi.index');
-Route::get('/informasi/{informasi}', [InformasiController::class, 'publicShow'])->name('informasi.show');
+// Public Informasi Routes (DISABLED)
+// Route::get('/informasi', [InformasiController::class, 'publicIndex'])->name('informasi.index');
+// Route::get('/informasi/{informasi}', [InformasiController::class, 'publicShow'])->name('informasi.show');
 
 // Public Agenda Routes
 Route::get('/agenda', [AgendaController::class, 'publicIndex'])->name('agenda.index');
 Route::get('/agenda/{agenda}', [AgendaController::class, 'publicShow'])->name('agenda.show');
 
-// Authentication Routes
-Route::get('/login', [AdminController::class, 'login'])->name('login');
-Route::post('/login', [AdminController::class, 'authenticate'])->name('login.authenticate');
-Route::post('/logout', [AdminController::class, 'logout'])->name('logout');
+// User Authentication Routes
+Route::get('/register', [App\Http\Controllers\Auth\RegisterController::class, 'showRegistrationForm'])->name('register');
+Route::post('/register', [App\Http\Controllers\Auth\RegisterController::class, 'register']);
+Route::get('/verify-otp', [App\Http\Controllers\Auth\RegisterController::class, 'showOtpForm'])->name('otp.verify');
+Route::post('/verify-otp', [App\Http\Controllers\Auth\RegisterController::class, 'verifyOtp'])->name('otp.verify.submit');
+Route::post('/resend-otp', [App\Http\Controllers\Auth\RegisterController::class, 'resendOtp'])->name('otp.resend');
+
+Route::get('/login', [App\Http\Controllers\Auth\LoginController::class, 'showLoginForm'])->name('login');
+Route::post('/login', [App\Http\Controllers\Auth\LoginController::class, 'login'])->name('login.authenticate');
+Route::post('/logout', [App\Http\Controllers\Auth\LoginController::class, 'logout'])->name('logout');
+
+// Captcha Routes
+Route::get('/captcha', [App\Http\Controllers\CaptchaController::class, 'generate'])->name('captcha');
+Route::get('/captcha/refresh', [App\Http\Controllers\CaptchaController::class, 'refresh'])->name('captcha.refresh');
 
 // Admin Authentication Routes
 Route::get('/admin/login', [AdminController::class, 'login'])->name('admin.login');
@@ -93,18 +100,18 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::delete('/fotos/{foto}', [App\Http\Controllers\Admin\FotoController::class, 'destroy'])->name('fotos.destroy');
     Route::patch('/fotos/{foto}/status', [App\Http\Controllers\Admin\FotoController::class, 'updateStatus'])->name('fotos.status');
     
-    // Comment moderation routes
-    Route::get('/comments/pending', [App\Http\Controllers\Admin\CommentController::class, 'pending'])->name('comments.pending');
-    Route::get('/comments/approved', [App\Http\Controllers\Admin\CommentController::class, 'approved'])->name('comments.approved');
-    Route::get('/comments/pending/count', [App\Http\Controllers\Admin\CommentController::class, 'pendingCount'])->name('comments.pending.count');
-    Route::post('/comments/{comment}/moderate', [App\Http\Controllers\Admin\CommentController::class, 'moderate'])->name('comments.moderate');
+    // Comment moderation routes (DISABLED)
+    // Route::get('/comments/pending', [App\Http\Controllers\Admin\CommentController::class, 'pending'])->name('comments.pending');
+    // Route::get('/comments/approved', [App\Http\Controllers\Admin\CommentController::class, 'approved'])->name('comments.approved');
+    // Route::get('/comments/pending/count', [App\Http\Controllers\Admin\CommentController::class, 'pendingCount'])->name('comments.pending.count');
+    // Route::post('/comments/{comment}/moderate', [App\Http\Controllers\Admin\CommentController::class, 'moderate'])->name('comments.moderate');
     
     // Gallery report route
     Route::get('/gallery/report', [App\Http\Controllers\Admin\GalleryReportController::class, 'generate'])->name('gallery.report');
     // Reporting page
     Route::get('/reports/gallery', [App\Http\Controllers\Admin\GalleryReportController::class, 'index'])->name('reports.gallery.index');
-    // Comment moderation page
-    Route::get('/comments/moderation', [App\Http\Controllers\Admin\CommentController::class, 'moderation'])->name('comments.moderation');
+    // Comment moderation page (DISABLED)
+    // Route::get('/comments/moderation', [App\Http\Controllers\Admin\CommentController::class, 'moderation'])->name('comments.moderation');
     Route::post('/fotos/bulk-delete', [App\Http\Controllers\Admin\FotoController::class, 'bulkDelete'])->name('fotos.bulk-delete');
     
     // Note: API routes for fotos should live in routes/api.php to avoid conflicts with Admin UI
@@ -118,8 +125,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
     // Agenda Management
     Route::resource('agenda', AgendaController::class);
     
-    // Informasi Management
-    Route::resource('informasi', InformasiController::class);
+    // Informasi Management (DISABLED)
+    // Route::resource('informasi', InformasiController::class);
     
     
     // Contact Messages Management

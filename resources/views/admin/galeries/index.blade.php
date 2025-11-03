@@ -474,13 +474,48 @@
         font-weight: 600;
     }
     
-    .photo-details h6 {
-        font-size: 1rem;
-        font-weight: 600;
-    }
-    
     .photo-details p {
         font-size: 0.875rem;
+    }
+    
+    /* Modal Z-Index Fixes - Remove backdrop overlay completely */
+    .modal {
+        z-index: 1055 !important;
+        background: transparent !important;
+        background-color: transparent !important;
+    }
+    
+    .modal-backdrop,
+    .modal-backdrop.show,
+    .modal-backdrop.fade,
+    div.modal-backdrop {
+        display: none !important;
+        opacity: 0 !important;
+        visibility: hidden !important;
+        pointer-events: none !important;
+        background: transparent !important;
+        background-color: transparent !important;
+    }
+    
+    .modal.show {
+        background: transparent !important;
+        background-color: transparent !important;
+    }
+    
+    .modal.fade {
+        background: transparent !important;
+        background-color: transparent !important;
+    }
+    
+    body.modal-open {
+        overflow: auto !important;
+        padding-right: 0 !important;
+    }
+    
+    .modal-content {
+        position: relative;
+        z-index: 1056 !important;
+        box-shadow: 0 15px 50px rgba(0, 0, 0, 0.4) !important;
     }
 </style>
 @endsection
@@ -493,32 +528,80 @@ let currentPhotoId = null;
 // Function to view photo
 async function viewPhoto(photoId) {
     currentPhotoId = photoId;
-            try {
-                const res = await fetch(`{{ url('admin/fotos') }}/${photoId}`);
-                const data = await res.json();
-                if (data?.success) {
-                    const f = data.data;
+    
+    // Clean up any stuck modals/backdrops first
+    document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
+    document.body.classList.remove('modal-open');
+    document.body.style.overflow = '';
+    document.body.style.paddingRight = '';
+    
+    // Close any open modals
+    const openModals = document.querySelectorAll('.modal.show');
+    openModals.forEach(modal => {
+        const bsModal = bootstrap.Modal.getInstance(modal);
+        if (bsModal) bsModal.hide();
+    });
+    
+    try {
+        const res = await fetch(`{{ url('admin/fotos') }}/${photoId}`);
+        const data = await res.json();
+        if (data?.success) {
+            const f = data.data;
             document.getElementById('viewPhotoImage').src = f.full_path ?? (`${location.origin}/storage/${f.path}`);
             document.getElementById('viewPhotoTitle').textContent = f.judul ?? '';
             document.getElementById('viewPhotoDescription').textContent = 'Tidak ada deskripsi';
             document.getElementById('viewPhotoCategory').textContent = f.kategori?.nama ?? '—';
             document.getElementById('viewPhotoCreatedAt').textContent = (new Date(f.created_at)).toLocaleString('id-ID');
             
-            // Edit button removed - no longer needed
-            
-            new bootstrap.Modal(document.getElementById('viewPhotoModal')).show();
+            // Force cleanup before showing modal
+            setTimeout(() => {
+                document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
+                document.body.classList.remove('modal-open');
+                document.body.style.removeProperty('overflow');
+                document.body.style.removeProperty('padding-right');
+                
+                setTimeout(() => {
+                    const modalEl = document.getElementById('viewPhotoModal');
+                    const modal = new bootstrap.Modal(modalEl, {
+                        backdrop: false,
+                        keyboard: true,
+                        focus: true
+                    });
+                    modal.show();
+                }, 50);
+            }, 50);
         } else {
             alert('Gagal memuat detail foto');
         }
     } catch (error) {
         console.error('Error:', error);
         alert('Gagal memuat detail foto');
+        
+        // Remove any backdrop that might be stuck
+        document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
+        document.body.classList.remove('modal-open');
+        document.body.style.overflow = '';
+        document.body.style.paddingRight = '';
     }
 }
 
 // Function to edit photo
 async function editPhoto(photoId) {
     currentPhotoId = photoId;
+    
+    // Clean up any stuck modals/backdrops first
+    document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
+    document.body.classList.remove('modal-open');
+    document.body.style.overflow = '';
+    document.body.style.paddingRight = '';
+    
+    // Close any open modals
+    const openModals = document.querySelectorAll('.modal.show');
+    openModals.forEach(modal => {
+        const bsModal = bootstrap.Modal.getInstance(modal);
+        if (bsModal) bsModal.hide();
+    });
+    
     try {
         const res = await fetch(`{{ url('admin/fotos') }}/${photoId}`);
         const data = await res.json();
@@ -534,13 +617,35 @@ async function editPhoto(photoId) {
                 currentPhotoElement.src = f.full_path ?? (`${location.origin}/storage/${f.path}`);
             }
             
-            new bootstrap.Modal(document.getElementById('editPhotoModal')).show();
+            // Force cleanup before showing modal
+            setTimeout(() => {
+                document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
+                document.body.classList.remove('modal-open');
+                document.body.style.removeProperty('overflow');
+                document.body.style.removeProperty('padding-right');
+                
+                setTimeout(() => {
+                    const modalEl = document.getElementById('editPhotoModal');
+                    const modal = new bootstrap.Modal(modalEl, {
+                        backdrop: false,
+                        keyboard: true,
+                        focus: true
+                    });
+                    modal.show();
+                }, 50);
+            }, 50);
         } else {
             alert('Gagal memuat data foto');
         }
     } catch (error) {
         console.error('Error:', error);
         alert('Gagal memuat data foto');
+        
+        // Remove any backdrop that might be stuck
+        document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
+        document.body.classList.remove('modal-open');
+        document.body.style.overflow = '';
+        document.body.style.paddingRight = '';
     }
 }
 

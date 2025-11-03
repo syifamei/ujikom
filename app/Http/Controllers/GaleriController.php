@@ -14,13 +14,15 @@ class GaleriController extends Controller
     public function index(Request $request)
     {
         $user = auth()->user();
-        $query = Foto::with(['kategori', 'likes'])
+        $query = Foto::with(['kategori'])
             ->withCount(['comments as comments_count' => function($query) {
                 $query->where('status', 'approved');
             }])
+            // Count total likes from database (real count from all users)
             ->withCount('likes as likes_count')
             ->where('status', 'Aktif')
             ->when($user, function($q) use ($user) {
+                // Load only current user's like status
                 $q->with(['likes' => function($query) use ($user) {
                     $query->where('user_id', $user->id);
                 }]);
@@ -53,7 +55,12 @@ class GaleriController extends Controller
 
         // Add is_liked status to each foto
         $fotos->each(function($foto) use ($user) {
-            $foto->is_liked = $user ? $foto->likes->contains('user_id', $user->id) : false;
+            if ($user) {
+                // Check if current user has liked this photo
+                $foto->is_liked = $foto->likes->contains('user_id', $user->id);
+            } else {
+                $foto->is_liked = false;
+            }
         });
 
         return view('galeri', compact('fotos', 'kategoris'))->with('galeri', $fotos);
@@ -313,6 +320,116 @@ class GaleriController extends Controller
         return redirect()->route('galeri.download', ['id' => (int) $foto->id]);
     }
 
-    
+    /**
+     * Handle like action with authentication check
+     * Redirect to register if not authenticated
+     */
+    public function likePhoto($id)
+    {
+        try {
+            // Check if user is authenticated
+            if (!auth()->check()) {
+                return response()->json([
+                    'success' => false,
+                    'redirect' => route('register'),
+                    'message' => 'Silakan login atau daftar terlebih dahulu untuk menyukai foto'
+                ], 401);
+            }
+
+            $foto = Foto::findOrFail($id);
+            $user = auth()->user();
+            
+            // Check if user already liked this photo
+            $existingLike = $foto->likes()->where('user_id', $user->id)->first();
+            
+            if ($existingLike) {
+                // Unlike
+                $existingLike->delete();
+                $isLiked = false;
+                $message = 'Like dihapus';
+            } else {
+                // Like
+                $foto->likes()->create([
+                    'user_id' => $user->id,
+                    'ip_address' => request()->ip(),
+                ]);
+                $isLiked = true;
+                $message = 'Berhasil menyukai foto';
+            }
+            
+            // Refresh like count from database
+            $likesCount = $foto->likes()->count();
+            
+            return response()->json([
+                'success' => true,
+                'message' => $message,
+                'likes_count' => $likesCount,
+                'is_liked' => $isLiked
+            ]);
+        } catch (\Exception $e) {
+            \Log::error('Like error: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Handle download action with authentication check
+     * Redirect to register if not authenticated
+     */
+    public function downloadPhoto($id)
+    {
+        // Check if user is authenticated
+        if (!auth()->check()) {
+            return redirect()->route('register')->with('error', 'Silakan login atau daftar terlebih dahulu untuk mengunduh foto');
+        }
+
+        $foto = Foto::where('status', 'Aktif')->findOrFail($id);
+        
+        // Resolve file location
+        $originalName = basename($foto->path ?: $foto->file ?: 'download.jpg');
+        $candidates = [];
+        
+        if (!empty($foto->path)) {
+            $candidates[] = Storage::path('public/' . ltrim($foto->path, '/'));
+            $candidates[] = public_path('storage/' . ltrim($foto->path, '/'));
+            $candidates[] = public_path(ltrim($foto->path, '/'));
+        }
+        if (!empty($foto->file)) {
+            $candidates[] = Storage::path('public/' . ltrim($foto->file, '/'));
+            $candidates[] = public_path('storage/' . ltrim($foto->file, '/'));
+            $candidates[] = public_path(ltrim($foto->file, '/'));
+        }
+        $candidates[] = public_path('images/' . $originalName);
+
+        $absolutePath = null;
+        foreach ($candidates as $cand) {
+            if ($cand && file_exists($cand)) {
+                $absolutePath = $cand;
+                break;
+            }
+        }
+        
+        if (!$absolutePath) {
+            return redirect()->back()->with('error', 'File tidak ditemukan di penyimpanan.');
+        }
+
+        // Log the download
+        try {
+            \App\Models\DownloadLog::create([
+                'foto_id' => $foto->id,
+                'user_id' => auth()->id(),
+                'ip_address' => request()->ip(),
+                'user_agent' => request()->userAgent(),
+            ]);
+        } catch (\Throwable $e) {
+            // Continue even if logging fails
+        }
+
+        // Return file download response
+        return response()->download($absolutePath, $originalName);
+    }
     
 }

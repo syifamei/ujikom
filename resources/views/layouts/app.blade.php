@@ -587,6 +587,53 @@
         @media (prefers-reduced-motion: reduce) {
             html { scroll-behavior: auto; }
         }
+
+        /* Auth Buttons Styles */
+        .btn-outline-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(13, 110, 253, 0.3) !important;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(13, 110, 253, 0.4) !important;
+        }
+
+        .btn.dropdown-toggle:hover {
+            background: #f3f4f6 !important;
+            border-color: #3b82f6 !important;
+            transform: translateY(-1px);
+        }
+
+        .dropdown-item:hover {
+            background-color: #f3f4f6 !important;
+        }
+
+        .dropdown-item[type="submit"]:hover {
+            background-color: #fee2e2 !important;
+        }
+
+        /* Responsive Auth Buttons */
+        @media (max-width: 991px) {
+            .ms-3 {
+                margin-top: 1rem !important;
+                margin-left: 0 !important;
+                width: 100%;
+                justify-content: center;
+            }
+
+            .ms-3 .btn {
+                flex: 1;
+            }
+
+            .ms-3 .dropdown {
+                width: 100%;
+            }
+
+            .ms-3 .dropdown .btn {
+                width: 100%;
+            }
+        }
     </style>
     
     @yield('styles')
@@ -644,21 +691,43 @@
                             Agenda
                         </a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link {{ request()->routeIs('informasi.*') ? 'active' : '' }}" href="{{ route('informasi.index') }}">
-                            <span class="nav-icon">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                                    <polyline points="14,2 14,8 20,8"></polyline>
-                                    <line x1="16" y1="13" x2="8" y2="13"></line>
-                                    <line x1="16" y1="17" x2="8" y2="17"></line>
-                                    <polyline points="10,9 9,9 8,9"></polyline>
-                                </svg>
-                            </span>
-                            Informasi
-                        </a>
-                    </li>
                 </ul>
+                
+                <!-- Auth Buttons -->
+                <div class="ms-3" style="display: flex; align-items: center; gap: 8px;">
+                    @guest
+                        <a href="{{ route('login') }}" class="btn btn-outline-primary btn-sm" style="border-radius: 20px; padding: 6px 16px; font-weight: 600; font-size: 13px; border-width: 2px; transition: all 0.3s ease;">
+                            <i class="fas fa-sign-in-alt"></i> Login
+                        </a>
+                        <a href="{{ route('register') }}" class="btn btn-primary btn-sm" style="border-radius: 20px; padding: 6px 16px; font-weight: 600; font-size: 13px; transition: all 0.3s ease; box-shadow: 0 2px 4px rgba(13, 110, 253, 0.2);">
+                            <i class="fas fa-user-plus"></i> Daftar
+                        </a>
+                    @endguest
+                    
+                    @auth
+                        <div class="dropdown">
+                            <button class="btn btn-light dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false" style="border-radius: 20px; padding: 6px 16px; font-weight: 600; font-size: 13px; border: 2px solid #e5e7eb; transition: all 0.3s ease;">
+                                <i class="fas fa-user-circle"></i> {{ Auth::user()->name }}
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown" style="border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); margin-top: 8px;">
+                                <li>
+                                    <a class="dropdown-item" href="#" style="padding: 8px 16px; transition: all 0.3s ease;">
+                                        <i class="fas fa-user"></i> Profil Saya
+                                    </a>
+                                </li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    <form method="POST" action="{{ route('logout') }}" style="margin: 0;">
+                                        @csrf
+                                        <button type="submit" class="dropdown-item" style="padding: 8px 16px; color: #dc2626; transition: all 0.3s ease;">
+                                            <i class="fas fa-sign-out-alt"></i> Logout
+                                        </button>
+                                    </form>
+                                </li>
+                            </ul>
+                        </div>
+                    @endauth
+                </div>
             </div>
         </div>
     </nav>
@@ -927,6 +996,7 @@
     </script>
     
     @yield('scripts')
+    @stack('scripts')
     
     <!-- Toast Container -->
     <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 1090;"></div>

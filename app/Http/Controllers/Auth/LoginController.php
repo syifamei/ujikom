@@ -33,7 +33,18 @@ class LoginController extends Controller
         $request->validate([
             'email' => 'required|email',
             'password' => 'required',
+            'captcha' => 'required|numeric',
+        ], [
+            'captcha.required' => 'Kode captcha wajib diisi.',
+            'captcha.numeric' => 'Kode captcha harus berupa angka.',
         ]);
+
+        // Validasi captcha (math question)
+        if (!$request->captcha || $request->captcha != session('captcha_answer')) {
+            return back()->withErrors([
+                'captcha' => 'Jawaban salah. Silakan coba lagi.',
+            ])->withInput($request->except('password', 'captcha'));
+        }
 
         $credentials = $request->only('email', 'password');
         $isAdminLogin = $request->is('admin/*');
@@ -51,8 +62,15 @@ class LoginController extends Controller
             ])->withInput($request->except('password'));
         }
 
-        // Check if the account is active
-        if (isset($user->status) && $user->status !== 'Aktif') {
+        // OTP verification disabled - no need to check is_active for regular users
+        // if (!$isAdminLogin && isset($user->is_active) && !$user->is_active) {
+        //     return back()->withErrors([
+        //         'email' => 'Akun Anda belum diverifikasi. Silakan cek email untuk kode OTP.',
+        //     ])->withInput($request->except('password'));
+        // }
+
+        // Check if the account status is active (for admin users only)
+        if ($isAdminLogin && isset($user->status) && $user->status !== 'Aktif') {
             return back()->withErrors([
                 'email' => 'Akun Anda tidak aktif. Silakan hubungi administrator.',
             ])->withInput($request->except('password'));

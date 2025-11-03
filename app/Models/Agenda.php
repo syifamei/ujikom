@@ -12,6 +12,8 @@ class Agenda extends Model
         'title',
         'description',
         'scheduled_at',
+        'waktu',
+        'lokasi',
         'photo_path',
         'status'
     ];

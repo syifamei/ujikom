@@ -487,10 +487,46 @@
         margin-bottom: 1.5rem;
     }
 
-    /* Modal Styling */
+    /* Modal Styling - Remove backdrop overlay */
+    .modal {
+        z-index: 1055 !important;
+        background: transparent !important;
+        background-color: transparent !important;
+    }
+    
+    .modal-backdrop,
+    .modal-backdrop.show,
+    .modal-backdrop.fade,
+    div.modal-backdrop {
+        display: none !important;
+        opacity: 0 !important;
+        visibility: hidden !important;
+        pointer-events: none !important;
+        background: transparent !important;
+        background-color: transparent !important;
+    }
+    
+    .modal.show {
+        background: transparent !important;
+        background-color: transparent !important;
+    }
+    
+    .modal.fade {
+        background: transparent !important;
+        background-color: transparent !important;
+    }
+    
+    body.modal-open {
+        overflow: auto !important;
+        padding-right: 0 !important;
+    }
+    
     .modal-content {
         border-radius: 8px;
         border: 1px solid #e9ecef;
+        position: relative;
+        z-index: 1056 !important;
+        box-shadow: 0 15px 50px rgba(0, 0, 0, 0.4) !important;
     }
 
     .modal-header, .modal-footer { 
@@ -604,7 +640,7 @@ async function viewAgenda(id) {
             if (titleEl && descEl) {
                 document.getElementById('viewTitle').textContent = titleEl.textContent;
                 document.getElementById('viewDescription').textContent = descEl.textContent;
-                new bootstrap.Modal(document.getElementById('viewModal')).show();
+                new bootstrap.Modal(document.getElementById('viewModal'), { backdrop: false }).show();
                 return;
             }
         }
@@ -640,15 +676,42 @@ async function viewAgenda(id) {
         
         const data = await response.json();
         console.log('Response data:', data);
+        console.log('Waktu:', data.data.waktu);
+        console.log('Lokasi:', data.data.lokasi);
+        console.log('Status:', data.data.status);
         
         if (data.success) {
-            document.getElementById('viewTitle').textContent = data.data.title || 'Agenda';
-            document.getElementById('viewDescription').textContent = data.data.description || 'Tidak ada deskripsi';
-            document.getElementById('viewTanggal').textContent = data.data.scheduled_at ? new Date(data.data.scheduled_at).toLocaleDateString('id-ID') : '-';
-            document.getElementById('viewWaktu').textContent = data.data.scheduled_at ? new Date(data.data.scheduled_at).toLocaleTimeString('id-ID', {hour: '2-digit', minute: '2-digit'}) : '-';
-            document.getElementById('viewLokasi').textContent = '-';
-            document.getElementById('viewStatus').innerHTML = `<span class="badge ${data.data.status == 'Aktif' ? 'bg-success' : 'bg-secondary'}">${data.data.status}</span>`;
-            new bootstrap.Modal(document.getElementById('viewModal')).show();
+            // Set Title
+            const titleEl = document.getElementById('viewTitle');
+            titleEl.textContent = data.data.title || 'Agenda';
+            console.log('Title set to:', titleEl.textContent);
+            
+            // Set Description
+            const descEl = document.getElementById('viewDescription');
+            descEl.textContent = data.data.description || 'Tidak ada deskripsi';
+            console.log('Description set to:', descEl.textContent);
+            
+            // Set Tanggal
+            const tanggalEl = document.getElementById('viewTanggal');
+            tanggalEl.textContent = data.data.scheduled_at ? new Date(data.data.scheduled_at).toLocaleDateString('id-ID') : '-';
+            console.log('Tanggal set to:', tanggalEl.textContent);
+            
+            // Set Waktu
+            const waktuEl = document.getElementById('viewWaktu');
+            waktuEl.textContent = data.data.waktu || '-';
+            console.log('Waktu set to:', waktuEl.textContent);
+            
+            // Set Lokasi
+            const lokasiEl = document.getElementById('viewLokasi');
+            lokasiEl.textContent = data.data.lokasi || '-';
+            console.log('Lokasi set to:', lokasiEl.textContent);
+            
+            // Set Status
+            const statusEl = document.getElementById('viewStatus');
+            statusEl.innerHTML = `<span class="badge ${data.data.status == 'Aktif' ? 'bg-success' : 'bg-secondary'}">${data.data.status || 'Aktif'}</span>`;
+            console.log('Status set to:', statusEl.innerHTML);
+            
+            new bootstrap.Modal(document.getElementById('viewModal'), { backdrop: false }).show();
         } else {
             alert('Gagal memuat data agenda: ' + (data.message || 'Unknown error'));
         }
@@ -661,6 +724,22 @@ async function viewAgenda(id) {
 // Edit function - show modal with agenda form
 async function editAgenda(id) {
     currentEditId = id;
+    
+    // Clean up any stuck modals/backdrops first
+    document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
+    document.body.classList.remove('modal-open');
+    document.body.style.overflow = '';
+    document.body.style.paddingRight = '';
+    
+    // Close any open modals
+    const openModals = document.querySelectorAll('.modal.show');
+    openModals.forEach(modal => {
+        const bsModal = bootstrap.Modal.getInstance(modal);
+        if (bsModal) {
+            bsModal.hide();
+        }
+    });
+    
     try {
         console.log('Editing agenda with ID:', id);
         
@@ -673,15 +752,10 @@ async function editAgenda(id) {
         });
         
         console.log('Response status:', response.status);
+        console.log('Response headers:', response.headers);
         
-        if (response.status === 404) {
-            alert('Agenda tidak ditemukan!');
-            return;
-        }
-        
-        if (response.status === 500) {
-            alert('Terjadi kesalahan server. Silakan coba lagi.');
-            return;
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
         }
         
         // Check if response is JSON
@@ -689,27 +763,53 @@ async function editAgenda(id) {
         if (!contentType || !contentType.includes('application/json')) {
             const text = await response.text();
             console.error('Non-JSON response:', text);
-            alert('Server mengembalikan response yang tidak valid. Status: ' + response.status);
-            return;
+            throw new Error('Server tidak mengembalikan JSON. Mungkin ada error di backend.');
         }
         
         const data = await response.json();
         console.log('Response data:', data);
         
-        if (data.success) {
+        if (data.success && data.data) {
             document.getElementById('editJudul').value = data.data.title || '';
             document.getElementById('editDeskripsi').value = data.data.description || '';
             document.getElementById('editTanggal').value = data.data.scheduled_at ? data.data.scheduled_at.split(' ')[0] : '';
-            document.getElementById('editWaktu').value = data.data.scheduled_at ? data.data.scheduled_at.split(' ')[1] || '' : '';
-            document.getElementById('editLokasi').value = '';
-            document.getElementById('editStatus').value = data.data.status;
-            new bootstrap.Modal(document.getElementById('editModal')).show();
+            document.getElementById('editWaktu').value = data.data.waktu || '';
+            document.getElementById('editLokasi').value = data.data.lokasi || '';
+            document.getElementById('editStatus').value = data.data.status || 'Aktif';
+            
+            // Force cleanup before showing modal
+            setTimeout(() => {
+                // Remove all backdrops
+                document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
+                
+                // Reset body
+                document.body.classList.remove('modal-open');
+                document.body.style.removeProperty('overflow');
+                document.body.style.removeProperty('padding-right');
+                
+                // Show modal with slight delay to ensure cleanup is done
+                setTimeout(() => {
+                    const modalEl = document.getElementById('editModal');
+                    const modal = new bootstrap.Modal(modalEl, {
+                        backdrop: false,
+                        keyboard: true,
+                        focus: true
+                    });
+                    modal.show();
+                }, 50);
+            }, 50);
         } else {
-            alert('Gagal memuat data agenda: ' + (data.message || 'Unknown error'));
+            throw new Error(data.message || 'Data tidak valid');
         }
     } catch (error) {
-        console.error('Error:', error);
+        console.error('Error in editAgenda:', error);
         alert('Gagal memuat data agenda: ' + error.message);
+        
+        // Remove any backdrop that might be stuck
+        document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
+        document.body.classList.remove('modal-open');
+        document.body.style.overflow = '';
+        document.body.style.paddingRight = '';
     }
 }
 

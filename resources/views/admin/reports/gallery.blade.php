@@ -160,6 +160,10 @@
         <div class="section-title">Ringkasan Statistik</div>
         <div class="stats-grid">
             <div class="stat-card">
+                <div class="stat-number">{{ $totalUsers }}</div>
+                <div class="stat-label">Total User</div>
+            </div>
+            <div class="stat-card">
                 <div class="stat-number">{{ $totalPhotos }}</div>
                 <div class="stat-label">Total Foto</div>
             </div>
@@ -168,120 +172,103 @@
                 <div class="stat-label">Total Like</div>
             </div>
             <div class="stat-card">
-                <div class="stat-number">{{ $totalComments }}</div>
-                <div class="stat-label">Total Komentar</div>
-            </div>
-            <div class="stat-card">
                 <div class="stat-number">{{ $totalDownloads }}</div>
                 <div class="stat-label">Total Download</div>
             </div>
         </div>
     </div>
 
-    <!-- Top Photos by Likes -->
+    <!-- Daftar User Terdaftar -->
     <div class="section">
-        <div class="section-title">Foto Terpopuler (Berdasarkan Like)</div>
+        <div class="section-title">Daftar User yang Sudah Register/Login ({{ $period }})</div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>No</th>
+                    <th>Username</th>
+                    <th>Nama Lengkap</th>
+                    <th>Email</th>
+                    <th>Tanggal Daftar</th>
+                </tr>
+            </thead>
+            <tbody>
+                @forelse($users as $index => $user)
+                <tr>
+                    <td class="text-center">{{ $index + 1 }}</td>
+                    <td>{{ $user->username ?? $user->name }}</td>
+                    <td>{{ $user->name }}</td>
+                    <td>{{ $user->email }}</td>
+                    <td>{{ $user->created_at->format('d/m/Y H:i') }}</td>
+                </tr>
+                @empty
+                <tr>
+                    <td colspan="5" class="text-center">Tidak ada user pada periode ini</td>
+                </tr>
+                @endforelse
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Statistik per Kategori -->
+    <div class="section">
+        <div class="section-title">Statistik Like & Download per Kategori</div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>No</th>
+                    <th>Kategori</th>
+                    <th>Total Foto</th>
+                    <th>Total Like</th>
+                    <th>Total Download</th>
+                </tr>
+            </thead>
+            <tbody>
+                @forelse($kategoriStats as $index => $stat)
+                <tr>
+                    <td class="text-center">{{ $index + 1 }}</td>
+                    <td>{{ $stat['nama'] }}</td>
+                    <td class="text-center">{{ $stat['total_fotos'] }}</td>
+                    <td class="text-center">{{ $stat['total_likes'] }}</td>
+                    <td class="text-center">{{ $stat['total_downloads'] }}</td>
+                </tr>
+                @empty
+                <tr>
+                    <td colspan="5" class="text-center">Tidak ada data kategori</td>
+                </tr>
+                @endforelse
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Detail Foto dengan Like & Download -->
+    <div class="section page-break">
+        <div class="section-title">Detail Like & Download per Foto ({{ $period }})</div>
         <table class="table">
             <thead>
                 <tr>
                     <th>No</th>
                     <th>Judul Foto</th>
                     <th>Kategori</th>
-                    <th>Jumlah Like</th>
+                    <th>Like</th>
+                    <th>Download</th>
                     <th>Tanggal Upload</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach($topPhotos as $index => $foto)
+                @forelse($fotos as $index => $foto)
                 <tr>
                     <td class="text-center">{{ $index + 1 }}</td>
                     <td>{{ $foto->judul }}</td>
-                    <td>{{ $foto->kategori ? $foto->kategori->nama : 'Tidak ada kategori' }}</td>
-                    <td class="text-center">{{ $foto->likes_count }}</td>
+                    <td>{{ $foto->kategori ? $foto->kategori->nama : '-' }}</td>
+                    <td class="text-center">{{ $foto->likes_count_period ?? 0 }}</td>
+                    <td class="text-center">{{ $foto->downloads_count_period ?? 0 }}</td>
                     <td>{{ $foto->created_at->format('d/m/Y') }}</td>
                 </tr>
-                @endforeach
-            </tbody>
-        </table>
-    </div>
-
-    <!-- Top Photos by Downloads -->
-    <div class="section">
-        <div class="section-title">Foto Paling Banyak Diunduh</div>
-        <table class="table">
-            <thead>
+                @empty
                 <tr>
-                    <th>No</th>
-                    <th>Judul Foto</th>
-                    <th>Kategori</th>
-                    <th>Jumlah Download</th>
-                    <th>Tanggal Upload</th>
+                    <td colspan="6" class="text-center">Tidak ada foto pada periode ini</td>
                 </tr>
-            </thead>
-            <tbody>
-                @foreach($topDownloadedPhotos as $index => $foto)
-                <tr>
-                    <td class="text-center">{{ $index + 1 }}</td>
-                    <td>{{ $foto->judul }}</td>
-                    <td>{{ $foto->kategori ? $foto->kategori->nama : 'Tidak ada kategori' }}</td>
-                    <td class="text-center">{{ $foto->downloadLogs->count() }}</td>
-                    <td>{{ $foto->created_at->format('d/m/Y') }}</td>
-                </tr>
-                @endforeach
-            </tbody>
-        </table>
-    </div>
-
-    <!-- Recent Comments -->
-    <div class="section">
-        <div class="section-title">Komentar Terbaru ({{ $period }})</div>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>No</th>
-                    <th>Nama User</th>
-                    <th>Komentar</th>
-                    <th>Foto</th>
-                    <th>Tanggal</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach($recentComments as $index => $comment)
-                <tr>
-                    <td class="text-center">{{ $index + 1 }}</td>
-                    <td>{{ $comment->user ? $comment->user->name : $comment->author_name }}</td>
-                    <td>{{ Str::limit($comment->content, 50) }}</td>
-                    <td>{{ $comment->foto->judul }}</td>
-                    <td>{{ $comment->created_at->format('d/m/Y H:i') }}</td>
-                </tr>
-                @endforeach
-            </tbody>
-        </table>
-    </div>
-
-    <!-- Recent Downloads -->
-    <div class="section">
-        <div class="section-title">Download Terbaru ({{ $period }})</div>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>No</th>
-                    <th>Nama User</th>
-                    <th>Foto</th>
-                    <th>IP Address</th>
-                    <th>Tanggal Download</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach($recentDownloads as $index => $download)
-                <tr>
-                    <td class="text-center">{{ $index + 1 }}</td>
-                    <td>{{ $download->user ? $download->user->name : 'Guest' }}</td>
-                    <td>{{ $download->foto->judul }}</td>
-                    <td>{{ $download->ip_address }}</td>
-                    <td>{{ $download->created_at->format('d/m/Y H:i') }}</td>
-                </tr>
-                @endforeach
+                @endforelse
             </tbody>
         </table>
     </div>

@@ -51,18 +51,17 @@ class AgendaController extends Controller
             ]);
         }
 
-        // Combine tanggal and waktu into scheduled_at
-        $scheduledAt = $request->tanggal;
-        if ($request->waktu) {
-            $scheduledAt .= ' ' . $request->waktu;
-        }
+        // Set scheduled_at from tanggal
+        $scheduledAt = $request->tanggal . ' 00:00:00';
 
-            $data = [
-                'title' => $request->judul,
-                'description' => $request->deskripsi,
-                'scheduled_at' => $scheduledAt,
-                'status' => $request->status
-            ];
+        $data = [
+            'title' => $request->judul,
+            'description' => $request->deskripsi,
+            'scheduled_at' => $scheduledAt,
+            'waktu' => $request->waktu,
+            'lokasi' => $request->lokasi,
+            'status' => $request->status
+        ];
 
         Agenda::create($data);
 
@@ -79,7 +78,17 @@ class AgendaController extends Controller
             if (request()->expectsJson() || request()->ajax() || request()->header('X-Requested-With') === 'XMLHttpRequest') {
                 return response()->json([
                     'success' => true,
-                    'data' => $agenda
+                    'data' => [
+                        'id' => $agenda->id,
+                        'title' => $agenda->title,
+                        'description' => $agenda->description,
+                        'scheduled_at' => $agenda->scheduled_at,
+                        'waktu' => $agenda->waktu,
+                        'lokasi' => $agenda->lokasi,
+                        'status' => $agenda->status,
+                        'created_at' => $agenda->created_at,
+                        'updated_at' => $agenda->updated_at,
+                    ]
                 ]);
             }
             
@@ -117,29 +126,45 @@ class AgendaController extends Controller
     public function update(Request $request, $id)
     {
         try {
+            \Log::info('Updating agenda', ['id' => $id, 'data' => $request->all()]);
+            
             $agenda = Agenda::findOrFail($id);
             
             $request->validate([
-                'judul' => 'required|string|max:255',
-                'deskripsi' => 'required|string|max:1000',
-                'tanggal' => 'required|date',
+                'judul' => 'nullable|string|max:255',
+                'deskripsi' => 'nullable|string|max:1000',
+                'tanggal' => 'nullable|date',
                 'waktu' => 'nullable|string|max:50',
                 'lokasi' => 'nullable|string|max:255',
-                'status' => 'required|in:Aktif,Nonaktif'
+                'status' => 'nullable|in:Aktif,Nonaktif'
             ]);
 
-            // Combine tanggal and waktu into scheduled_at
-            $scheduledAt = $request->tanggal;
-            if ($request->waktu) {
-                $scheduledAt .= ' ' . $request->waktu;
+            // Set scheduled_at from tanggal (jika ada)
+            $data = [];
+            
+            if ($request->filled('judul')) {
+                $data['title'] = $request->judul;
             }
-
-            $data = [
-                'title' => $request->judul,
-                'description' => $request->deskripsi,
-                'scheduled_at' => $scheduledAt,
-                'status' => $request->status
-            ];
+            
+            if ($request->filled('deskripsi')) {
+                $data['description'] = $request->deskripsi;
+            }
+            
+            if ($request->filled('tanggal')) {
+                $data['scheduled_at'] = $request->tanggal . ' 00:00:00';
+            }
+            
+            if ($request->filled('waktu')) {
+                $data['waktu'] = $request->waktu;
+            }
+            
+            if ($request->filled('lokasi')) {
+                $data['lokasi'] = $request->lokasi;
+            }
+            
+            if ($request->filled('status')) {
+                $data['status'] = $request->status;
+            }
 
             $agenda->update($data);
 
@@ -155,6 +180,13 @@ class AgendaController extends Controller
             return redirect()->route('admin.agenda.index')
                 ->with('success', 'Agenda berhasil diperbarui!');
         } catch (\Exception $e) {
+            // Log the error for debugging
+            \Log::error('Error updating agenda: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString()
+            ]);
+
             // Check if request expects JSON response (AJAX)
             if ($request->expectsJson() || $request->ajax() || $request->header('X-Requested-With') === 'XMLHttpRequest') {
                 return response()->json([
@@ -164,7 +196,7 @@ class AgendaController extends Controller
             }
 
             return redirect()->route('admin.agenda.index')
-                ->with('error', 'Gagal memperbarui agenda!');
+                ->with('error', 'Gagal memperbarui agenda: ' . $e->getMessage());
         }
     }
 

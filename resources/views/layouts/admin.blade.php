@@ -18,6 +18,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Admin Responsive CSS -->
+    <link href="{{ asset('css/admin-responsive.css') }}" rel="stylesheet">
     
     <style>
         :root {
@@ -115,6 +117,41 @@
             border-bottom: 1px solid #e2e8f0;
             margin-bottom: 0.5rem;
             flex-shrink: 0;
+            position: relative;
+        }
+
+        /* Close button for mobile */
+        .sidebar-close {
+            display: none;
+            position: absolute;
+            top: 0.75rem;
+            right: 0.75rem;
+            background: rgba(59, 130, 246, 0.1);
+            border: none;
+            border-radius: 6px;
+            width: 32px;
+            height: 32px;
+            align-items: center;
+            justify-content: center;
+            color: var(--sidebar-text);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            z-index: 10;
+        }
+
+        .sidebar-close:hover {
+            background: rgba(59, 130, 246, 0.2);
+            color: var(--blue-medium);
+        }
+
+        .sidebar-close i {
+            font-size: 1rem;
+        }
+
+        @media (max-width: 767.98px) {
+            .sidebar-close {
+                display: flex;
+            }
         }
 
         .sidebar-logo {
@@ -414,6 +451,515 @@
                 left: 0.75rem;
             }
         }
+
+        /* ========================================
+           RESPONSIVE ENHANCEMENTS - 100% RESPONSIVE
+           ======================================== */
+
+        /* Tablet Landscape & Small Desktop (768px - 1024px) */
+        @media (min-width: 768px) and (max-width: 1024px) {
+            :root {
+                --sidebar-width: 200px;
+            }
+
+            .sidebar {
+                width: 200px;
+            }
+
+            .main-content {
+                margin-left: 200px;
+                width: calc(100% - 200px);
+                max-width: calc(100% - 200px);
+                padding: 70px 15px 15px 15px;
+            }
+
+            .navbar {
+                left: 200px;
+                width: calc(100% - 200px);
+                padding: 0.4rem 1rem;
+            }
+
+            .nav-link {
+                font-size: 0.8rem;
+                padding: 0.5rem 0.8rem;
+            }
+
+            .nav-link i {
+                font-size: 0.9rem;
+                margin-right: 0.5rem;
+            }
+
+            .sidebar-title {
+                font-size: 0.85rem;
+            }
+
+            .sidebar-subtitle {
+                font-size: 0.6rem;
+            }
+
+            .page-content {
+                padding: 0.75rem 1rem;
+            }
+        }
+
+        /* Tablet Portrait (577px - 767px) */
+        @media (min-width: 577px) and (max-width: 767.98px) {
+            .sidebar {
+                width: 220px;
+                transform: translateX(-100%);
+            }
+
+            .sidebar.show {
+                transform: translateX(0);
+                box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
+            }
+
+            .main-content {
+                margin-left: 0;
+                width: 100%;
+                max-width: 100%;
+                padding: 70px 15px 15px 15px;
+            }
+
+            .navbar {
+                left: 0;
+                width: 100%;
+                padding: 0.5rem 1rem;
+            }
+
+            .navbar-brand {
+                font-size: 1.1rem;
+            }
+
+            .navbar-text {
+                font-size: 0.85rem;
+            }
+
+            .page-content {
+                padding: 0.75rem;
+            }
+
+            .card {
+                margin-bottom: 1rem;
+            }
+
+            /* Ensure tables are scrollable */
+            .table-responsive {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            /* Better button sizing */
+            .btn {
+                font-size: 0.85rem;
+                padding: 0.4rem 0.8rem;
+            }
+
+            .btn-sm {
+                font-size: 0.75rem;
+                padding: 0.25rem 0.5rem;
+            }
+        }
+
+        /* Mobile Landscape (481px - 576px) */
+        @media (min-width: 481px) and (max-width: 576px) {
+            .sidebar {
+                width: 200px;
+                transform: translateX(-100%);
+            }
+
+            .sidebar.show {
+                transform: translateX(0);
+                box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
+            }
+
+            .main-content {
+                margin-left: 0;
+                width: 100%;
+                max-width: 100%;
+                padding: 65px 12px 12px 12px;
+            }
+
+            .navbar {
+                left: 0;
+                width: 100%;
+                height: 55px;
+                padding: 0.4rem 0.75rem;
+            }
+
+            .navbar-brand {
+                font-size: 1rem;
+            }
+
+            .navbar-text {
+                font-size: 0.8rem;
+            }
+
+            .sidebar-title {
+                font-size: 0.85rem;
+            }
+
+            .sidebar-subtitle {
+                font-size: 0.6rem;
+            }
+
+            .nav-link {
+                font-size: 0.8rem;
+                padding: 0.5rem 0.8rem;
+            }
+
+            .page-content {
+                padding: 0.5rem 0.75rem;
+            }
+
+            .card-body {
+                padding: 0.75rem;
+            }
+
+            /* Stack flex items on mobile */
+            .d-flex.justify-content-between {
+                flex-direction: column;
+                align-items: flex-start !important;
+                gap: 0.5rem;
+            }
+
+            .d-flex.justify-content-between > * {
+                width: 100%;
+            }
+
+            /* Full width buttons on mobile */
+            .btn:not(.btn-sm):not(.btn-close) {
+                width: 100%;
+                margin-bottom: 0.5rem;
+            }
+        }
+
+        /* Mobile Portrait (320px - 480px) */
+        @media (max-width: 480px) {
+            .sidebar {
+                width: 200px;
+                transform: translateX(-100%);
+            }
+
+            .sidebar.show {
+                transform: translateX(0);
+                box-shadow: 2px 0 15px rgba(0, 0, 0, 0.4);
+            }
+
+            .main-content {
+                margin-left: 0;
+                width: 100%;
+                max-width: 100%;
+                padding: 60px 10px 10px 10px;
+            }
+
+            .navbar {
+                left: 0;
+                width: 100%;
+                height: 50px;
+                padding: 0.3rem 0.6rem;
+            }
+
+            .navbar-brand {
+                font-size: 0.9rem;
+            }
+
+            .navbar-text {
+                font-size: 0.75rem;
+                display: none; /* Hide on very small screens */
+            }
+
+            .navbar-text .fa-user {
+                display: inline-block;
+            }
+
+            .sidebar-toggle {
+                top: 0.5rem;
+                left: 0.5rem;
+                padding: 0.4rem 0.5rem;
+            }
+
+            .sidebar-title {
+                font-size: 0.8rem;
+            }
+
+            .sidebar-subtitle {
+                font-size: 0.55rem;
+            }
+
+            .nav-link {
+                font-size: 0.75rem;
+                padding: 0.45rem 0.7rem;
+                margin: 0.1rem 0.3rem;
+            }
+
+            .nav-link i {
+                font-size: 0.85rem;
+                margin-right: 0.5rem;
+            }
+
+            .page-content {
+                padding: 0.5rem;
+            }
+
+            .card {
+                margin-bottom: 0.75rem;
+                border-radius: 12px;
+            }
+
+            .card-body {
+                padding: 0.75rem;
+            }
+
+            .card-header {
+                padding: 0.75rem;
+            }
+
+            /* Mobile-friendly headings */
+            h1, .h1 {
+                font-size: 1.5rem;
+            }
+
+            h2, .h2 {
+                font-size: 1.3rem;
+            }
+
+            h3, .h3 {
+                font-size: 1.1rem;
+            }
+
+            h4, .h4 {
+                font-size: 1rem;
+            }
+
+            h5, .h5 {
+                font-size: 0.9rem;
+            }
+
+            h6, .h6 {
+                font-size: 0.85rem;
+            }
+
+            /* Stack flex items */
+            .d-flex.justify-content-between,
+            .d-flex.align-items-center {
+                flex-direction: column;
+                align-items: flex-start !important;
+                gap: 0.5rem;
+            }
+
+            .d-flex.justify-content-between > *,
+            .d-flex.align-items-center > * {
+                width: 100%;
+            }
+
+            /* Full width buttons */
+            .btn:not(.btn-sm):not(.btn-close):not(.btn-outline-warning):not(.btn-outline-danger) {
+                width: 100%;
+                margin-bottom: 0.5rem;
+            }
+
+            .btn-sm {
+                font-size: 0.7rem;
+                padding: 0.2rem 0.4rem;
+            }
+
+            /* Better form controls */
+            .form-control,
+            .form-select {
+                font-size: 0.9rem;
+            }
+
+            /* Better table responsiveness */
+            .table {
+                font-size: 0.8rem;
+            }
+
+            .table td,
+            .table th {
+                padding: 0.4rem;
+            }
+
+            /* Better badge sizing */
+            .badge {
+                font-size: 0.65rem;
+                padding: 0.25rem 0.4rem;
+            }
+
+            /* Better alert sizing */
+            .alert {
+                font-size: 0.85rem;
+                padding: 0.6rem;
+            }
+
+            /* Grid adjustments for mobile */
+            .row > * {
+                padding-left: 5px;
+                padding-right: 5px;
+            }
+
+            .col-12 {
+                margin-bottom: 0.5rem;
+            }
+
+            /* Image responsiveness */
+            img {
+                max-width: 100%;
+                height: auto;
+            }
+        }
+
+        /* Extra small devices (< 320px) */
+        @media (max-width: 319px) {
+            .sidebar {
+                width: 180px;
+            }
+
+            .navbar-brand {
+                font-size: 0.8rem;
+            }
+
+            .navbar-text {
+                display: none;
+            }
+
+            .sidebar-title {
+                font-size: 0.75rem;
+            }
+
+            .nav-link {
+                font-size: 0.7rem;
+                padding: 0.4rem 0.6rem;
+            }
+
+            .btn {
+                font-size: 0.75rem;
+                padding: 0.3rem 0.6rem;
+            }
+        }
+
+        /* Overlay for mobile sidebar */
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1039;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .sidebar-overlay.show {
+            display: block;
+            opacity: 1;
+        }
+
+        @media (max-width: 767.98px) {
+            .sidebar-overlay {
+                cursor: pointer;
+            }
+        }
+
+        /* Prevent body scroll when sidebar is open on mobile */
+        @media (max-width: 767.98px) {
+            body.sidebar-open {
+                overflow: hidden;
+            }
+        }
+
+        /* Print styles */
+        @media print {
+            .sidebar,
+            .navbar,
+            .sidebar-toggle,
+            .btn,
+            .alert {
+                display: none;
+            }
+
+            .main-content {
+                margin-left: 0;
+                width: 100%;
+                max-width: 100%;
+            }
+
+            .card {
+                box-shadow: none;
+                border: 1px solid #ddd;
+            }
+        }
+
+        /* High DPI screens optimization */
+        @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+            .card {
+                border: 0.5px solid rgba(0, 0, 0, 0.05);
+            }
+
+            .sidebar {
+                border-right: 0.5px solid #e2e8f0;
+            }
+        }
+
+        /* Landscape orientation specific */
+        @media (max-height: 500px) and (orientation: landscape) {
+            .sidebar {
+                overflow-y: auto;
+            }
+
+            .navbar {
+                height: 45px;
+            }
+
+            .main-content {
+                padding-top: 55px;
+            }
+
+            .sidebar-header {
+                padding: 0.3rem 0.8rem 0.5rem;
+            }
+
+            .sidebar-logo-icon {
+                width: 30px;
+                height: 30px;
+            }
+
+            .nav-link {
+                padding: 0.4rem 0.8rem;
+            }
+        }
+
+        /* Accessibility improvements for all devices */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* Force hardware acceleration for smoother animations */
+        .sidebar,
+        .navbar,
+        .main-content,
+        .card {
+            -webkit-transform: translateZ(0);
+            transform: translateZ(0);
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+        }
+
+        /* Ensure no horizontal overflow on any device */
+        html,
+        body,
+        .container-fluid,
+        .row,
+        .main-content {
+            overflow-x: hidden !important;
+            max-width: 100% !important;
+        }
     </style>
     
     @yield('styles')
@@ -424,6 +970,9 @@
     <button class="sidebar-toggle" id="sidebarToggle">
         <i class="fas fa-bars"></i>
     </button>
+
+    <!-- Overlay for closing sidebar on mobile -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
     <div class="container-fluid">
         <div class="row">
@@ -439,6 +988,10 @@
                             <p class="sidebar-subtitle">Admin Panel</p>
                         </div>
                     </div>
+                    <!-- Close button for mobile -->
+                    <button class="sidebar-close" id="sidebarClose">
+                        <i class="fas fa-times"></i>
+                    </button>
                 </div>
                 
                 <nav class="sidebar-nav">
@@ -467,19 +1020,9 @@
                         <span>Laporan Galeri</span>
                     </a>
                     
-                    <a class="nav-link {{ request()->routeIs('admin.comments.moderation') ? 'active' : '' }}" href="{{ route('admin.comments.moderation') }}">
-                        <i class="fas fa-comments"></i>
-                        <span>Moderasi Komentar</span>
-                    </a>
-                    
                     <a class="nav-link {{ request()->routeIs('admin.agenda.*') ? 'active' : '' }}" href="{{ route('admin.agenda.index') }}">
                         <i class="fas fa-calendar-alt"></i>
                         <span>Kelola Agenda</span>
-                    </a>
-                    
-                    <a class="nav-link {{ request()->routeIs('admin.informasi.*') ? 'active' : '' }}" href="{{ route('admin.informasi.index') }}">
-                        <i class="fas fa-newspaper"></i>
-                        <span>Kelola Informasi</span>
                     </a>
                     
                     <a class="nav-link" href="{{ route('admin.logout') }}" onclick="return confirm('Yakin ingin logout?')">
@@ -521,26 +1064,76 @@
         document.addEventListener('DOMContentLoaded', function() {
             const sidebarToggle = document.getElementById('sidebarToggle');
             const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+            const sidebarClose = document.getElementById('sidebarClose');
             
-            if (sidebarToggle && sidebar) {
-                sidebarToggle.addEventListener('click', function() {
-                    sidebar.classList.toggle('show');
+            // Function to close sidebar
+            function closeSidebar() {
+                sidebar.classList.remove('show');
+                overlay.classList.remove('show');
+                document.body.style.overflow = '';
+            }
+            
+            // Function to open sidebar
+            function openSidebar() {
+                sidebar.classList.add('show');
+                overlay.classList.add('show');
+                document.body.style.overflow = 'hidden';
+            }
+            
+            if (sidebarToggle && sidebar && overlay) {
+                // Toggle sidebar when clicking hamburger button
+                sidebarToggle.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    if (sidebar.classList.contains('show')) {
+                        closeSidebar();
+                    } else {
+                        openSidebar();
+                    }
+                });
+                
+                // Close sidebar when clicking close button
+                if (sidebarClose) {
+                    sidebarClose.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        closeSidebar();
+                    });
+                }
+                
+                // Close sidebar when clicking overlay
+                overlay.addEventListener('click', function() {
+                    closeSidebar();
                 });
                 
                 // Close sidebar when clicking outside on mobile
                 document.addEventListener('click', function(event) {
                     if (window.innerWidth <= 767.98) {
                         if (!sidebar.contains(event.target) && !sidebarToggle.contains(event.target)) {
-                            sidebar.classList.remove('show');
+                            closeSidebar();
                         }
                     }
+                });
+                
+                // Close sidebar when clicking nav link on mobile
+                const navLinks = sidebar.querySelectorAll('.nav-link');
+                navLinks.forEach(function(link) {
+                    link.addEventListener('click', function() {
+                        if (window.innerWidth <= 767.98) {
+                            closeSidebar();
+                        }
+                    });
                 });
                 
                 // Close sidebar when window is resized to desktop
                 window.addEventListener('resize', function() {
                     if (window.innerWidth > 767.98) {
-                        sidebar.classList.remove('show');
+                        closeSidebar();
                     }
+                });
+                
+                // Prevent sidebar from closing when clicking inside it
+                sidebar.addEventListener('click', function(e) {
+                    e.stopPropagation();
                 });
             }
         });

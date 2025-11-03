@@ -505,6 +505,78 @@
             height: 60px;
             font-size: 2rem;
         }
+
+        /* Header responsive adjustments */
+        .d-flex.justify-content-between {
+            flex-direction: column;
+            align-items: stretch !important;
+            gap: 1rem;
+        }
+
+        .d-flex.gap-2 {
+            flex-direction: column;
+            width: 100%;
+        }
+
+        .d-flex.gap-2 .btn {
+            width: 100%;
+            margin-bottom: 0.5rem;
+        }
+
+        .btn {
+            font-size: 0.85rem;
+            padding: 0.6rem 1rem;
+        }
+    }
+
+    /* Extra responsive for very small screens */
+    @media (max-width: 400px) {
+        .gallery-card {
+            min-height: 220px;
+        }
+
+        .gallery-title {
+            font-size: 0.95rem;
+        }
+
+        .gallery-action {
+            width: 32px !important;
+            height: 32px !important;
+            font-size: 0.8rem !important;
+        }
+
+        h2 {
+            font-size: 1.2rem;
+        }
+
+        .btn {
+            font-size: 0.8rem;
+            padding: 0.5rem 0.8rem;
+        }
+    }
+
+    /* Modal responsiveness */
+    @media (max-width: 767px) {
+        .modal-dialog {
+            margin: 0.5rem;
+            max-width: calc(100% - 1rem);
+        }
+
+        .modal-xl {
+            max-width: calc(100% - 1rem);
+        }
+
+        .modal-body .row .col-md-6 {
+            margin-bottom: 1rem;
+        }
+
+        .comments-section {
+            max-height: 300px;
+        }
+
+        .comment-item {
+            font-size: 0.85rem;
+        }
     }
 </style>
 

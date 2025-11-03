@@ -42,22 +42,6 @@
         <div class="card border-0 shadow-sm h-100 stats-card">
             <div class="card-body text-center p-3">
                 <div class="mb-2">
-                    <i class="fas fa-newspaper fa-2x text-info"></i>
-                </div>
-                <h4 class="h3 mb-1 text-dark">{{ $totalInformasi }}</h4>
-                <p class="text-muted mb-0 small">Total Informasi</p>
-                <small class="text-success">
-                    <i class="fas fa-check-circle me-1"></i>
-                    Aktif
-                </small>
-            </div>
-        </div>
-    </div>
-    
-    <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 mb-3">
-        <div class="card border-0 shadow-sm h-100 stats-card">
-            <div class="card-body text-center p-3">
-                <div class="mb-2">
                     <i class="fas fa-calendar fa-2x text-success"></i>
                 </div>
                 <h4 class="h3 mb-1 text-dark">{{ $totalAgenda ?? 0 }}</h4>
@@ -147,43 +131,6 @@
     <!-- Recent Information & Agenda -->
     <div class="col-lg-4 mb-4">
         <!-- Recent Information -->
-        <div class="card border-0 shadow-sm mb-3">
-            <div class="card-header bg-white border-0 py-3">
-                <div class="d-flex justify-content-between align-items-center">
-                    <h5 class="card-title mb-0">
-                        <i class="fas fa-newspaper me-2 text-info"></i>
-                        Informasi Terbaru
-                    </h5>
-                    <a href="{{ route('admin.informasi.index') }}" class="btn btn-info btn-sm">
-                        <i class="fas fa-eye me-1"></i>
-                        Lihat Semua
-                    </a>
-                </div>
-            </div>
-            <div class="card-body p-3">
-                @if(isset($recentInformasi) && $recentInformasi->count() > 0)
-                <div class="list-group list-group-flush">
-                    @foreach($recentInformasi->take(3) as $info)
-                    <div class="list-group-item border-0 px-0 py-2">
-                        <div class="d-flex align-items-start">
-                            <i class="fas fa-file-alt text-info me-2 mt-1"></i>
-                            <div class="flex-grow-1">
-                                <h6 class="mb-1 small text-truncate">{{ $info->judul }}</h6>
-                                <small class="text-muted">{{ $info->created_at->format('d M Y') }}</small>
-                            </div>
-                        </div>
-                    </div>
-                    @endforeach
-                </div>
-                @else
-                <div class="text-center py-3">
-                    <i class="fas fa-newspaper fa-2x text-muted mb-2"></i>
-                    <p class="text-muted small">Belum ada informasi</p>
-                </div>
-                @endif
-            </div>
-        </div>
-        
         <!-- Recent Agenda -->
         <div class="card border-0 shadow-sm">
             <div class="card-header bg-white border-0 py-3">

@@ -23,6 +23,9 @@ class User extends Authenticatable
         'phone',
         'status',
         'profile_photo_path',
+        'otp_code',
+        'otp_expires_at',
+        'is_active',
     ];
 
     /**
@@ -33,6 +36,7 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
+        'otp_code',
     ];
 
     /**
@@ -43,6 +47,8 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
+        'otp_expires_at' => 'datetime',
+        'is_active' => 'boolean',
     ];
     
     /**
@@ -111,5 +117,54 @@ class User extends Authenticatable
     public function galleryItems()
     {
         return $this->hasManyThrough(GalleryItem::class, Gallery::class);
+    }
+
+    /**
+     * Generate OTP code for user verification.
+     */
+    public function generateOtpCode(): string
+    {
+        $otp = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
+        
+        $this->otp_code = $otp;
+        $this->otp_expires_at = now()->addMinutes(10); // OTP valid for 10 minutes
+        $this->save();
+        
+        return $otp;
+    }
+
+    /**
+     * Verify OTP code.
+     */
+    public function verifyOtpCode(string $otp): bool
+    {
+        if (!$this->otp_code || !$this->otp_expires_at) {
+            return false;
+        }
+
+        if ($this->otp_expires_at->isPast()) {
+            return false;
+        }
+
+        return $this->otp_code === $otp;
+    }
+
+    /**
+     * Clear OTP code after verification.
+     */
+    public function clearOtpCode(): void
+    {
+        $this->otp_code = null;
+        $this->otp_expires_at = null;
+        $this->save();
+    }
+
+    /**
+     * Activate user account.
+     */
+    public function activate(): void
+    {
+        $this->is_active = true;
+        $this->clearOtpCode();
     }
 }

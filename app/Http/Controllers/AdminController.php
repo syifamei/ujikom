@@ -123,7 +123,7 @@ class AdminController extends Controller
         $totalGaleries = Galery::count();
         $totalFotos = Foto::count();
         $totalPetugas = Petugas::count();
-        $totalInformasi = \App\Models\Informasi::count();
+        // $totalInformasi = \App\Models\Informasi::count(); // DISABLED
 
         // Statistik kategori
         $kategorisAktif = Kategori::where('status', 'Aktif')->count();
@@ -156,7 +156,7 @@ class AdminController extends Controller
 
         return view('admin.dashboard', compact(
             'totalPosts', 'totalKategoris', 'totalGaleries', 'totalFotos', 
-            'totalPetugas', 'totalAgendas', 'totalInformasi',
+            'totalPetugas', 'totalAgendas',
             'kategorisAktif', 'kategorisNonaktif', 'fotoPerKategori',
             'recentPosts', 'recentFotos', 'recentAgendas',
             'fotosBulanIni', 'kategoriPopuler'

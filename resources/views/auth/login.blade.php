@@ -16,151 +16,175 @@
 
         body {
             font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
+            background: radial-gradient(1200px 600px at 10% 10%, rgba(93, 224, 230, 0.35), transparent 60%),
+                        radial-gradient(900px 500px at 90% 20%, rgba(125, 227, 225, 0.45), transparent 55%),
+                        linear-gradient(135deg, #f6ffff 0%, #eaf9ff 100%);
+            position: relative;
             padding: 20px;
+            overflow: hidden;
         }
 
+        .bg-orb {
+            position: absolute;
+            border-radius: 9999px;
+            filter: blur(40px);
+            opacity: .6;
+            pointer-events: none;
+        }
+        .orb-1 { width: 260px; height: 260px; background: #7de3e1; top: 8%; left: 12%; }
+        .orb-2 { width: 320px; height: 320px; background: #5de0e6; bottom: 6%; right: 10%; }
+        .orb-3 { width: 180px; height: 180px; background: #ffffff; bottom: 18%; left: 8%; opacity: .35; }
+
         .login-container {
-            background: white;
+            background: rgba(255, 255, 255, 0.95);
+            border: 1px solid rgba(0, 123, 255, 0.2);
             border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 15px 35px rgba(0, 123, 255, 0.1), 0 5px 15px rgba(0, 0, 0, 0.08);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
             overflow: hidden;
             width: 100%;
             max-width: 400px;
             position: relative;
+            z-index: 1;
         }
 
         .login-header {
-            background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%);
-            color: white;
-            padding: 2rem;
+            color: #2c3e50;
+            padding: 25px 25px 18px;
             text-align: center;
+            background: linear-gradient(135deg, #f8f9ff 0%, #e8f2ff 100%);
             position: relative;
-            overflow: hidden;
-        }
-
-        .login-header::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            right: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
-            animation: float 6s ease-in-out infinite;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0px) rotate(0deg); }
-            50% { transform: translateY(-20px) rotate(180deg); }
         }
 
         .login-icon {
-            width: 80px;
-            height: 80px;
-            background: rgba(255, 255, 255, 0.2);
+            width: 75px;
+            height: 75px;
+            background: white;
+            box-shadow: 0 8px 25px rgba(0, 123, 255, 0.15);
+            border: 3px solid rgba(0, 123, 255, 0.1);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 auto 1rem;
-            position: relative;
-            z-index: 2;
+            margin: 0 auto 12px;
         }
 
         .login-icon i {
-            font-size: 2rem;
+            font-size: 1.8rem;
+            color: #007bff;
         }
 
         .login-title {
-            font-size: 1.8rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-            position: relative;
-            z-index: 2;
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 0.3rem;
         }
 
         .login-subtitle {
-            opacity: 0.9;
-            position: relative;
-            z-index: 2;
+            font-size: 0.9rem;
+            color: #6c757d;
         }
 
         .login-form {
-            padding: 2rem;
+            padding: 20px;
+            background: white;
         }
 
         .form-group {
-            margin-bottom: 1.5rem;
+            margin-bottom: 1rem;
         }
 
         .form-label {
             display: block;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.45rem;
             font-weight: 500;
-            color: #374151;
+            color: #2c3e50;
+            font-size: 0.9rem;
         }
 
         .form-input {
             width: 100%;
-            padding: 0.875rem 1rem;
-            border: 2px solid #e5e7eb;
-            border-radius: 10px;
-            font-size: 1rem;
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            padding: 11px 44px 11px 44px;
+            height: 46px;
+            color: #2c3e50;
             transition: all 0.3s ease;
-            background: #f9fafb;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            font-size: 0.95rem;
         }
 
         .form-input:focus {
             outline: none;
-            border-color: #3b82f6;
+            border-color: #007bff;
             background: white;
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1), 0 4px 12px rgba(0, 123, 255, 0.15);
+            transform: translateY(-1px);
         }
 
         .input-group {
             position: relative;
         }
 
-        .input-group i {
+        .input-icon {
             position: absolute;
-            left: 1rem;
+            left: 14px;
             top: 50%;
             transform: translateY(-50%);
-            color: #9ca3af;
-            z-index: 1;
+            color: #6c757d;
+            z-index: 10;
+            font-size: 16px;
         }
 
-        .input-group .form-input {
-            padding-left: 3rem;
+        .input-action {
+            position: absolute;
+            right: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6c757d;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            padding: 4px;
+            border-radius: 4px;
+            z-index: 10;
+            font-size: 16px;
+        }
+
+        .input-action:hover {
+            color: #007bff;
+            background: rgba(0, 123, 255, 0.1);
         }
 
         .btn-login {
             width: 100%;
-            background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%);
-            color: white;
+            background: linear-gradient(135deg, #007bff, #0056b3);
             border: none;
-            padding: 0.875rem;
-            border-radius: 10px;
-            font-size: 1rem;
+            border-radius: 14px;
+            padding: 11px;
             font-weight: 600;
+            color: white;
+            letter-spacing: .2px;
+            box-shadow: 0 12px 30px rgba(0, 123, 255, .35);
+            transition: transform .15s ease, box-shadow .2s ease, filter .2s ease;
             cursor: pointer;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
+            font-size: 0.95rem;
         }
 
         .btn-login:hover {
             transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(59, 130, 246, 0.3);
+            filter: brightness(1.1);
+            background: linear-gradient(135deg, #0056b3, #004085);
         }
 
         .btn-login:active {
             transform: translateY(0);
+            box-shadow: 0 6px 16px rgba(0, 123, 255, .35);
         }
 
         .btn-login:disabled {
@@ -171,19 +195,21 @@
 
         .login-footer {
             text-align: center;
-            padding: 1rem 2rem 2rem;
+            padding: 0.8rem 1.5rem 1.2rem;
             color: #6b7280;
+            font-size: 0.9rem;
+            background: white;
         }
 
         .login-footer a {
-            color: #3b82f6;
+            color: #007bff;
             text-decoration: none;
             font-weight: 500;
             transition: color 0.3s ease;
         }
 
         .login-footer a:hover {
-            color: #1e40af;
+            color: #0056b3;
         }
 
         .error-message {
@@ -235,37 +261,37 @@
 
         .back-link {
             position: absolute;
-            top: 1rem;
-            left: 1rem;
-            color: white;
+            top: 0.9rem;
+            left: 0.9rem;
+            color: #2c3e50;
             text-decoration: none;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             transition: color 0.3s ease;
             z-index: 3;
         }
 
         .back-link:hover {
-            color: #e5e7eb;
+            color: #007bff;
         }
 
         @media (max-width: 480px) {
+            body {
+                padding: 15px;
+            }
             .login-container {
-                margin: 0;
-                border-radius: 0;
-                min-height: 100vh;
+                max-width: 100%;
             }
-            
-            .login-header {
-                padding: 1.5rem;
-            }
-            
             .login-form {
-                padding: 1.5rem;
+                padding: 18px;
             }
         }
     </style>
 </head>
 <body>
+    <div class="bg-orb orb-1"></div>
+    <div class="bg-orb orb-2"></div>
+    <div class="bg-orb orb-3"></div>
+
     <div class="login-container">
         <a href="{{ route('galeri') }}" class="back-link">
             <i class="fas fa-arrow-left"></i>
@@ -300,7 +326,7 @@
                 <div class="form-group">
                     <label for="email" class="form-label">Email</label>
                     <div class="input-group">
-                        <i class="fas fa-envelope"></i>
+                        <i class="fas fa-envelope input-icon"></i>
                         <input type="email" 
                                id="email" 
                                name="email" 
@@ -315,7 +341,8 @@
                 <div class="form-group">
                     <label for="password" class="form-label">Password</label>
                     <div class="input-group">
-                        <i class="fas fa-lock"></i>
+                        <i class="fas fa-lock input-icon"></i>
+                        <i class="fa-regular fa-eye-slash input-action" id="togglePassword" title="Show/Hide"></i>
                         <input type="password" 
                                id="password" 
                                name="password" 
@@ -323,6 +350,25 @@
                                required 
                                autocomplete="current-password"
                                placeholder="Masukkan password Anda">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="captcha" class="form-label">Verifikasi</label>
+                    <div style="padding: 10px; background: #f8f9fa; border: 2px dashed #e9ecef; border-radius: 10px; text-align: center; margin-bottom: 8px;">
+                        <h3 style="margin: 0; font-size: 1.3rem; color: #2c3e50; font-weight: 600;">
+                            {{ App\Http\Controllers\CaptchaController::generateMathQuestion() }}
+                        </h3>
+                    </div>
+                    <div class="input-group">
+                        <i class="fas fa-calculator input-icon"></i>
+                        <input type="number" 
+                               id="captcha" 
+                               name="captcha" 
+                               class="form-input" 
+                               required 
+                               autocomplete="off"
+                               placeholder="Ketik jawaban Anda">
                     </div>
                 </div>
 
@@ -345,6 +391,28 @@
     </div>
 
     <script>
+        // Password toggle visibility
+        (function() {
+            const toggle = document.getElementById('togglePassword');
+            const password = document.getElementById('password');
+
+            if (toggle && password) {
+                toggle.addEventListener('click', function () {
+                    const isHidden = password.getAttribute('type') === 'password';
+                    password.setAttribute('type', isHidden ? 'text' : 'password');
+                    if (isHidden) {
+                        this.classList.remove('fa-eye-slash');
+                        this.classList.add('fa-eye');
+                        this.title = 'Hide';
+                    } else {
+                        this.classList.remove('fa-eye');
+                        this.classList.add('fa-eye-slash');
+                        this.title = 'Show';
+                    }
+                });
+            }
+        })();
+
         document.getElementById('loginForm').addEventListener('submit', function(e) {
             const btn = document.getElementById('loginBtn');
             btn.classList.add('loading');

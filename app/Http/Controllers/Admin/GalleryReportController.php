@@ -4,8 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Foto;
-use App\Models\Comment;
+use App\Models\User;
 use App\Models\DownloadLog;
+use App\Models\Kategori;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 
@@ -15,12 +16,10 @@ class GalleryReportController extends Controller
     {
         $period = $request->query('period', 'all'); // all, weekly, monthly
 
-        // Get all photos regardless of kategori
+        // Get all photos with likes and download logs
         $query = Foto::with([
             'kategori', 
-            'comments' => function($q){ $q->where('status','approved'); },
-            'pendingComments' => function($q){ $q->where('status','pending'); },
-            'rejectedComments' => function($q){ $q->where('status','rejected'); },
+            'likes',
             'downloadLogs'
         ])->where('status','Aktif');
 
@@ -33,24 +32,92 @@ class GalleryReportController extends Controller
 
         $fotos = $query->get();
 
-        // Calculate summary for all photos in the period
+        // Get all registered users
+        $usersQuery = User::query();
+        if ($period === 'weekly') {
+            $usersQuery->where('created_at', '>=', now()->subWeek());
+        } elseif ($period === 'monthly') {
+            $usersQuery->where('created_at', '>=', now()->subMonth());
+        }
+        $users = $usersQuery->orderBy('created_at', 'desc')->get();
+
+        // Calculate likes per foto
+        $fotosWithLikes = $fotos->map(function($foto) use ($period) {
+            $likesQuery = $foto->likes();
+            if ($period === 'weekly') {
+                $likesQuery->where('created_at', '>=', now()->subWeek());
+            } elseif ($period === 'monthly') {
+                $likesQuery->where('created_at', '>=', now()->subMonth());
+            }
+            $foto->likes_count_period = $likesQuery->count();
+            return $foto;
+        });
+
+        // Calculate downloads per foto
+        $fotosWithDownloads = $fotosWithLikes->map(function($foto) use ($period) {
+            $downloadsQuery = $foto->downloadLogs();
+            if ($period === 'weekly') {
+                $downloadsQuery->where('created_at', '>=', now()->subWeek());
+            } elseif ($period === 'monthly') {
+                $downloadsQuery->where('created_at', '>=', now()->subMonth());
+            }
+            $foto->downloads_count_period = $downloadsQuery->count();
+            return $foto;
+        });
+
+        // Calculate likes and downloads per kategori
+        $kategoris = Kategori::with('fotos')->where('status', 'Aktif')->get();
+        $kategoriStats = $kategoris->map(function($kategori) use ($period) {
+            $fotosInKategori = $kategori->fotos->where('status', 'Aktif');
+            
+            $totalLikes = 0;
+            $totalDownloads = 0;
+            
+            foreach ($fotosInKategori as $foto) {
+                $likesQuery = $foto->likes();
+                $downloadsQuery = $foto->downloadLogs();
+                
+                if ($period === 'weekly') {
+                    $likesQuery->where('created_at', '>=', now()->subWeek());
+                    $downloadsQuery->where('created_at', '>=', now()->subWeek());
+                } elseif ($period === 'monthly') {
+                    $likesQuery->where('created_at', '>=', now()->subMonth());
+                    $downloadsQuery->where('created_at', '>=', now()->subMonth());
+                }
+                
+                $totalLikes += $likesQuery->count();
+                $totalDownloads += $downloadsQuery->count();
+            }
+            
+            return [
+                'nama' => $kategori->nama,
+                'total_likes' => $totalLikes,
+                'total_downloads' => $totalDownloads,
+                'total_fotos' => $fotosInKategori->count()
+            ];
+        });
+
+        // Calculate summary
         $summary = [
-            'likes' => (int) $fotos->sum('likes_count'),
-            'dislikes' => (int) $fotos->sum('dislikes_count'),
-            'comments' => (int) $fotos->sum(fn($f) => $f->comments->count()),
-            'pending_comments' => (int) $fotos->sum(fn($f) => $f->pendingComments->count()),
-            'rejected_comments' => (int) $fotos->sum(fn($f) => $f->rejectedComments->count()),
-            'downloads' => (int) $fotos->sum(fn($f) => $f->downloadLogs->count()),
+            'total_users' => $users->count(),
             'total_photos' => $fotos->count(),
+            'total_likes' => $fotosWithLikes->sum('likes_count_period'),
+            'total_downloads' => $fotosWithDownloads->sum('downloads_count_period'),
         ];
 
         // Get weekly and monthly statistics for comparison
         $weeklyStats = $this->getPeriodStats('weekly');
         $monthlyStats = $this->getPeriodStats('monthly');
 
-        $kategoris = \App\Models\Kategori::orderBy('nama','asc')->get();
-
-        return view('admin.reports.gallery_index', compact('fotos','summary','kategoris','period','weeklyStats','monthlyStats'));
+        return view('admin.reports.gallery_index', compact(
+            'fotos',
+            'users',
+            'summary',
+            'kategoriStats',
+            'period',
+            'weeklyStats',
+            'monthlyStats'
+        ));
     }
 
     /**
@@ -65,21 +132,34 @@ class GalleryReportController extends Controller
             $startDate = now()->subMonth();
         }
 
-        $query = Foto::where('status','Aktif');
+        $query = Foto::with(['likes', 'downloadLogs'])->where('status','Aktif');
         if ($startDate) {
             $query->where('created_at', '>=', $startDate);
         }
 
         $fotos = $query->get();
+        
+        // Count likes filtered by period
+        $totalLikes = 0;
+        $totalDownloads = 0;
+        
+        foreach ($fotos as $foto) {
+            $likesQuery = $foto->likes();
+            $downloadsQuery = $foto->downloadLogs();
+            
+            if ($startDate) {
+                $likesQuery->where('created_at', '>=', $startDate);
+                $downloadsQuery->where('created_at', '>=', $startDate);
+            }
+            
+            $totalLikes += $likesQuery->count();
+            $totalDownloads += $downloadsQuery->count();
+        }
 
         return [
             'total_photos' => $fotos->count(),
-            'likes' => (int) $fotos->sum('likes_count'),
-            'dislikes' => (int) $fotos->sum('dislikes_count'),
-            'comments' => (int) $fotos->sum(fn($f) => $f->comments()->where('status','approved')->count()),
-            'pending_comments' => (int) $fotos->sum(fn($f) => $f->comments()->where('status','pending')->count()),
-            'rejected_comments' => (int) $fotos->sum(fn($f) => $f->comments()->where('status','rejected')->count()),
-            'downloads' => (int) $fotos->sum(fn($f) => $f->downloadLogs->count()),
+            'total_likes' => $totalLikes,
+            'total_downloads' => $totalDownloads,
         ];
     }
     /**
@@ -89,8 +169,8 @@ class GalleryReportController extends Controller
     {
         $period = $request->query('period', 'all'); // all, weekly, monthly
         
-        // Get photos with their statistics, filtered by period only (no kategori filter)
-        $query = Foto::with(['kategori', 'comments', 'downloadLogs'])
+        // Get photos with their statistics
+        $query = Foto::with(['kategori', 'likes', 'downloadLogs'])
             ->where('status', 'Aktif')
             ->orderBy('created_at', 'desc');
             
@@ -103,41 +183,69 @@ class GalleryReportController extends Controller
         
         $fotos = $query->get();
 
-        // Calculate statistics based on period
-        $totalPhotos = $fotos->count();
-        $totalLikes = $fotos->sum('likes_count');
-        
-        // Filter comments and downloads by period
-        $commentsQuery = Comment::where('status', 'approved');
-        $downloadsQuery = DownloadLog::query();
-        
+        // Get users
+        $usersQuery = User::query();
         if ($period === 'weekly') {
-            $commentsQuery->where('created_at', '>=', now()->subWeek());
-            $downloadsQuery->where('created_at', '>=', now()->subWeek());
+            $usersQuery->where('created_at', '>=', now()->subWeek());
         } elseif ($period === 'monthly') {
-            $commentsQuery->where('created_at', '>=', now()->subMonth());
-            $downloadsQuery->where('created_at', '>=', now()->subMonth());
+            $usersQuery->where('created_at', '>=', now()->subMonth());
         }
+        $users = $usersQuery->orderBy('created_at', 'desc')->get();
+
+        // Calculate likes and downloads per foto with period filter
+        $totalLikes = 0;
+        $totalDownloads = 0;
         
-        $totalComments = $commentsQuery->count();
-        $totalDownloads = $downloadsQuery->count();
+        foreach ($fotos as $foto) {
+            $likesQuery = $foto->likes();
+            $downloadsQuery = $foto->downloadLogs();
+            
+            if ($period === 'weekly') {
+                $likesQuery->where('created_at', '>=', now()->subWeek());
+                $downloadsQuery->where('created_at', '>=', now()->subWeek());
+            } elseif ($period === 'monthly') {
+                $likesQuery->where('created_at', '>=', now()->subMonth());
+                $downloadsQuery->where('created_at', '>=', now()->subMonth());
+            }
+            
+            $foto->likes_count_period = $likesQuery->count();
+            $foto->downloads_count_period = $downloadsQuery->count();
+            
+            $totalLikes += $foto->likes_count_period;
+            $totalDownloads += $foto->downloads_count_period;
+        }
 
-        // Get recent activity based on period
-        $recentComments = $commentsQuery->with(['user', 'foto'])
-            ->orderBy('created_at', 'desc')
-            ->get();
-
-        $recentDownloads = $downloadsQuery->with(['user', 'foto'])
-            ->orderBy('created_at', 'desc')
-            ->get();
-
-        // Get top photos by likes
-        $topPhotos = $fotos->sortByDesc('likes_count')->take(10);
-
-        // Get top photos by downloads
-        $topDownloadedPhotos = $fotos->sortByDesc(function($foto) {
-            return $foto->downloadLogs->count();
-        })->take(10);
+        // Calculate per kategori
+        $kategoris = Kategori::with('fotos')->where('status', 'Aktif')->get();
+        $kategoriStats = $kategoris->map(function($kategori) use ($period) {
+            $fotosInKategori = $kategori->fotos->where('status', 'Aktif');
+            
+            $totalLikes = 0;
+            $totalDownloads = 0;
+            
+            foreach ($fotosInKategori as $foto) {
+                $likesQuery = $foto->likes();
+                $downloadsQuery = $foto->downloadLogs();
+                
+                if ($period === 'weekly') {
+                    $likesQuery->where('created_at', '>=', now()->subWeek());
+                    $downloadsQuery->where('created_at', '>=', now()->subWeek());
+                } elseif ($period === 'monthly') {
+                    $likesQuery->where('created_at', '>=', now()->subMonth());
+                    $downloadsQuery->where('created_at', '>=', now()->subMonth());
+                }
+                
+                $totalLikes += $likesQuery->count();
+                $totalDownloads += $downloadsQuery->count();
+            }
+            
+            return [
+                'nama' => $kategori->nama,
+                'total_likes' => $totalLikes,
+                'total_downloads' => $totalDownloads,
+                'total_fotos' => $fotosInKategori->count()
+            ];
+        });
 
         // Set period label
         $periodLabel = 'Semua waktu';
@@ -149,14 +257,12 @@ class GalleryReportController extends Controller
 
         $data = [
             'fotos' => $fotos,
-            'totalPhotos' => $totalPhotos,
+            'users' => $users,
+            'kategoriStats' => $kategoriStats,
+            'totalPhotos' => $fotos->count(),
+            'totalUsers' => $users->count(),
             'totalLikes' => $totalLikes,
-            'totalComments' => $totalComments,
             'totalDownloads' => $totalDownloads,
-            'recentComments' => $recentComments,
-            'recentDownloads' => $recentDownloads,
-            'topPhotos' => $topPhotos,
-            'topDownloadedPhotos' => $topDownloadedPhotos,
             'generatedAt' => now()->format('d F Y H:i:s'),
             'period' => $periodLabel,
             'periodType' => $period

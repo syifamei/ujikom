@@ -11,236 +11,255 @@ body {
     color: #333;
 }
 
-/* Kontainer Utama */
-.galeri-container {
-    max-width: 1200px;
+/* Gallery Container */
+.gallery-container {
+    max-width: 1280px;
     margin: 0 auto;
-    padding: 2rem 1rem;
-    padding-top: 120px; /* Tambahan padding atas untuk header */
+    padding: 140px 20px 80px 20px;
+    min-height: 100vh;
 }
 
-/* Judul Halaman */
-.judul-halaman {
+/* Page Header */
+.page-header {
     text-align: center;
-    margin-bottom: 2rem;
+    margin-bottom: 40px;
 }
 
-.judul-halaman h1 {
-    font-size: 2.2rem;
-    color: #2c3e50;
-    margin-bottom: 0.5rem;
+.page-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #1f2937;
+    margin-bottom: 10px;
 }
 
-.judul-halaman p {
-    color: #7f8c8d;
-    font-size: 1.1rem;
+.page-subtitle {
+    font-size: 1rem;
+    color: #6b7280;
 }
 
-/* Grid Galeri */
+/* Filter Section */
+.filter-section {
+    margin-bottom: 40px;
+}
+
+.filter-dropdown {
+    width: 100%;
+    max-width: 300px;
+    padding: 12px 16px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: #374151;
+    background: white;
+    cursor: pointer;
+    transition: all 0.3s;
+    outline: none;
+}
+
+.filter-dropdown:hover {
+    border-color: #3b82f6;
+    box-shadow: 0 2px 8px rgba(59, 130, 246, 0.15);
+}
+
+.filter-dropdown:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* Gallery Grid - CSS Grid Biasa */
 .gallery-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 1.5rem;
-    margin-top: 2rem;
-    padding: 0 1.5rem 2rem;
-    max-width: 1200px;
-    margin: 0 auto;
+    gap: 24px;
+    margin-top: 30px;
 }
 
-/* Item Galeri */
-.galeri-item {
-    background: white;
-    border-radius: 4px;
-    overflow: hidden;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-    transition: all 0.3s ease;
-}
-
-.galeri-item:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-}
-
-/* Gambar */
-.galeri-gambar {
-    width: 100%;
-    height: 200px;
-    overflow: hidden;
-    position: relative;
-}
-
-.galeri-gambar img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.5s ease;
-}
-
-.galeri-item:hover .galeri-gambar img {
-    transform: scale(1.05);
-}
-
-/* Overlay Gambar */
-.galeri-overlay {
+/* Modern Card Styles */
+.card-image-overlay {
     position: absolute;
-    bottom: 0;
+    top: 0;
     left: 0;
     right: 0;
-    background: linear-gradient(transparent, rgba(0,0,0,0.7));
-    padding: 1rem;
-    color: white;
+    bottom: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.7), transparent 50%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    display: flex;
+    align-items: flex-end;
+    padding: 1.5rem;
 }
 
-.galeri-overlay h3 {
-    font-size: 1rem;
-    font-weight: 500;
-    margin-bottom: 0.25rem;
+.card-image-container:hover .card-image-overlay {
+    opacity: 1;
 }
 
-.galeri-overlay p {
-    font-size: 0.8rem;
-    opacity: 0.9;
-}
-
-/* Card Styles */
+/* Gallery Card */
 .gallery-card {
     background: #fff;
     border-radius: 12px;
     overflow: hidden;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
     position: relative;
-    height: 400px;
     display: flex;
     flex-direction: column;
 }
 
 .gallery-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+    transform: translateY(-4px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
 }
 
-.gallery-image-container {
+.gallery-card-image {
     width: 100%;
-    height: 250px;
+    height: 240px;
     overflow: hidden;
     position: relative;
     cursor: pointer;
     flex-shrink: 0;
 }
 
-.gallery-image {
+.gallery-card-image img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: transform 0.5s ease;
+    transition: transform 0.4s ease;
 }
 
-.gallery-card:hover .gallery-image {
-    transform: scale(1.05);
+.gallery-card:hover .gallery-card-image img {
+    transform: scale(1.08);
 }
 
-.gallery-overlay {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: linear-gradient(transparent, rgba(0,0,0,0.7));
-    padding: 1rem;
-    color: white;
-    pointer-events: none;
-}
-
-.gallery-title {
-    font-size: 1rem;
-    font-weight: 600;
-    margin: 0 0 0.25rem 0;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.gallery-date {
-    font-size: 0.8rem;
-    opacity: 0.9;
-    margin: 0;
-}
-
-/* Gallery Info */
-.gallery-info {
-    padding: 1rem;
+.gallery-card-content {
+    padding: 20px;
     flex-grow: 1;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
 }
 
-.gallery-info .gallery-title {
-    font-size: 1.1rem;
+/* Badge Styles */
+.badge-category {
+    display: inline-block;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.75rem;
     font-weight: 600;
-    margin: 0 0 0.5rem 0;
-    color: #2d3748;
+    background: #3b82f6;
+    color: white;
+    margin-bottom: 12px;
 }
 
-.gallery-category {
-    font-size: 0.9rem;
-    color: #718096;
-    margin: 0 0 0.5rem 0;
+.gallery-card-title {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: #1f2937;
+    margin: 0 0 10px 0;
+    line-height: 1.5;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    min-height: 3em;
 }
 
-.gallery-info-date {
-    font-size: 0.8rem;
-    color: #a0aec0;
-    margin: 0;
+.gallery-card-desc {
+    font-size: 0.875rem;
+    color: #6b7280;
+    margin-bottom: 14px;
+    line-height: 1.5;
+    flex-grow: 1;
+}
+
+/* Action Buttons on Card */
+.card-actions {
     display: flex;
     align-items: center;
-    gap: 0.25rem;
-}
-
-/* Action Buttons */
-.gallery-actions {
-    display: flex;
     justify-content: space-around;
-    padding: 1rem;
-    background: #f8f9fa;
-    border-top: 1px solid #eee;
-    flex-shrink: 0;
+    padding-top: 14px;
+    margin-top: auto;
+    border-top: 1px solid #e5e7eb;
 }
 
-.action-btn {
+.card-action-btn {
     display: flex;
-    flex-direction: column;
     align-items: center;
-    background: none;
+    justify-content: center;
+    gap: 6px;
+    padding: 10px 20px;
     border: none;
-    color: #6c757d;
+    background: transparent;
+    color: #6b7280;
     cursor: pointer;
-    padding: 8px 12px;
-    border-radius: 8px;
     transition: all 0.2s ease;
-    min-width: 60px;
-    white-space: nowrap;
+    font-size: 0.875rem;
+    position: relative;
+    z-index: 10;
+    border-radius: 6px;
 }
 
-.action-btn:hover {
-    background: #f1f3f5;
-    color: #495057;
+.card-action-btn:hover {
+    color: #3b82f6;
+    background: rgba(59, 130, 246, 0.08);
 }
 
-.action-btn i {
-    font-size: 1.2rem;
-    margin-bottom: 0.25rem;
-    display: block;
+.card-action-btn.liked {
+    color: #ef4444;
 }
 
-.action-btn span {
-    font-size: 0.7rem;
+.card-action-btn.liked:hover {
+    color: #dc2626;
+    background: rgba(239, 68, 68, 0.08);
+}
+
+.card-action-btn i {
+    font-size: 1.1rem;
+}
+
+.card-action-btn span {
     font-weight: 500;
-    text-align: center;
+    font-size: 0.85rem;
 }
 
-.action-btn.liked {
-    color: #ff4757;
+/* Notification Styles */
+.notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 1rem 1.5rem;
+    border-radius: 8px;
+    color: white;
+    font-weight: 500;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    z-index: 9999;
+    opacity: 0;
+    transform: translateX(400px);
+    transition: all 0.3s ease;
+}
+
+.notification.show {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.notification-success {
+    background: linear-gradient(135deg, #10b981, #059669);
+}
+
+.notification-error {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+}
+
+.notification-info {
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+}
+
+/* Line Clamp Utility */
+.line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }
 
 /* Interactive Icons Below Card */
@@ -557,48 +576,98 @@ body {
     background: #339af0;
 }
 
-/* Responsive */
-@media (max-width: 992px) {
+/* Empty State */
+.empty-state {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 80px 20px;
+}
+
+.empty-state-icon {
+    color: #9ca3af;
+    margin-bottom: 20px;
+    font-size: 4rem;
+}
+
+.empty-state h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #374151;
+    margin-bottom: 8px;
+}
+
+.empty-state p {
+    color: #6b7280;
+    font-size: 1rem;
+}
+
+/* Responsive Styles dengan Media Query */
+/* Desktop - 3 kolom (default sudah di atas) */
+@media (min-width: 1025px) {
     .gallery-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 1.5rem;
-    }
-    
-    .gallery-card {
-        height: 380px;
-    }
-    
-    .gallery-image-container {
-        height: 220px;
-    }
-    
-    .action-btn {
-        padding: 6px 10px;
-        min-width: 50px;
-    }
-    
-    .action-btn i {
-        font-size: 1.1rem;
-    }
-    
-    .action-btn span {
-        font-size: 0.65rem;
-    }
-    
-    .gallery-interactive-icons {
-        padding: 8px 0;
-    }
-    
-    .icon-btn {
-        padding: 6px 8px;
-        font-size: 16px;
-    }
-    
-    .icon-text {
-        font-size: 11px;
+        grid-template-columns: repeat(3, 1fr);
     }
 }
+
+/* Tablet - 2 kolom */
+@media (min-width: 641px) and (max-width: 1024px) {
+    .gallery-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+    }
     
+    .gallery-container {
+        padding: 120px 16px 60px 16px;
+    }
+    
+    .page-title {
+        font-size: 1.75rem;
+    }
+    
+    .gallery-card-image {
+        height: 220px;
+    }
+}
+
+/* Mobile - 1 kolom */
+@media (max-width: 640px) {
+    .gallery-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    .gallery-container {
+        padding: 100px 16px 50px 16px;
+    }
+    
+    .page-title {
+        font-size: 1.5rem;
+    }
+    
+    .page-subtitle {
+        font-size: 0.9rem;
+    }
+    
+    .gallery-card-image {
+        height: 200px;
+    }
+    
+    .filter-dropdown {
+        max-width: 100%;
+        font-size: 0.85rem;
+    }
+    
+    .card-action-btn {
+        padding: 8px 16px;
+        font-size: 0.8rem;
+    }
+    
+    .card-action-btn i {
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 768px) {
     .modal-content {
         flex-direction: column;
         max-height: 90vh;
@@ -612,107 +681,206 @@ body {
     .modal-sidebar {
         max-height: 40vh;
     }
+    
+    .notification {
+        top: 10px;
+        right: 10px;
+        left: 10px;
+        max-width: calc(100% - 20px);
+    }
 }
 
-@media (max-width: 576px) {
-    .gallery-grid {
-        grid-template-columns: 1fr;
-        gap: 1rem;
+/* ============================================
+   SIMPLE IMAGE PREVIEW MODAL
+   ============================================ */
+.image-preview-modal {
+    display: none;
+    position: fixed;
+    z-index: 10000;
+    padding-top: 50px;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.9);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.image-preview-content {
+    margin: auto;
+    display: block;
+    max-width: 90%;
+    max-height: 80vh;
+    object-fit: contain;
+    animation: zoomIn 0.3s ease;
+    cursor: default;
+}
+
+@keyframes zoomIn {
+    from { transform: scale(0.8); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+.image-preview-close {
+    position: absolute;
+    top: 15px;
+    right: 35px;
+    color: #f1f1f1;
+    font-size: 40px;
+    font-weight: bold;
+    transition: 0.3s;
+    cursor: pointer;
+    z-index: 10001;
+}
+
+.image-preview-close:hover,
+.image-preview-close:focus {
+    color: #bbb;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.image-preview-caption {
+    margin: auto;
+    display: block;
+    width: 80%;
+    max-width: 700px;
+    text-align: center;
+    color: #ccc;
+    padding: 10px 0;
+    height: 40px;
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+/* Responsive untuk mobile */
+@media (max-width: 768px) {
+    .image-preview-modal {
+        padding-top: 80px;
     }
     
-    .gallery-card {
-        height: 360px;
+    .image-preview-content {
+        max-width: 95%;
+        max-height: 70vh;
     }
     
-    .gallery-image-container {
-        height: 200px;
+    .image-preview-close {
+        top: 10px;
+        right: 20px;
+        font-size: 35px;
     }
     
-    .action-btn {
-        padding: 5px 8px;
-        min-width: 45px;
-    }
-    
-    .action-btn i {
-        font-size: 1rem;
-    }
-    
-    .action-btn span {
-        font-size: 0.6rem;
-    }
-    
-    .gallery-interactive-icons {
-        padding: 6px 0;
-    }
-    
-    .icon-btn {
-        padding: 4px 6px;
-        font-size: 14px;
-    }
-    
-    .icon-text {
-        font-size: 10px;
+    .image-preview-caption {
+        font-size: 0.9rem;
     }
 }
+
+@media (max-width: 480px) {
+    .image-preview-modal {
+        padding-top: 60px;
+    }
+    
+    .image-preview-content {
+        max-width: 98%;
+        max-height: 65vh;
+    }
+    
+    .image-preview-close {
+        top: 5px;
+        right: 15px;
+        font-size: 30px;
+    }
+}
+
 </style>
 @endsection
 
 @section('content')
-<div class="container py-5" style="margin-top: 100px;">
-    <div class="text-center mb-5">
-        <h1 class="display-5 fw-bold mb-3">Galeri Foto</h1>
-        <p class="lead text-muted">Koleksi momen berharga dari kegiatan sekolah kami</p>
+<div class="gallery-container">
+    <!-- Header -->
+    <div class="page-header">
+        <h1 class="page-title">Galeri Foto Kegiatan</h1>
+        <p class="page-subtitle">Lihat dokumentasi kegiatan, kegiatan dan produk sekolah SMKN 4 BOGOR</p>
     </div>
 
     <!-- Kategori Filter -->
-    <div class="mb-4">
-        <div class="d-flex flex-wrap gap-2 justify-content-center">
-            <a href="{{ route('galeri') }}" class="btn btn-outline-primary {{ !request('kategori') ? 'active' : '' }}">
+    <div class="filter-section">
+        <select id="kategoriFilter" class="filter-dropdown" onchange="window.location.href=this.value">
+            <option value="{{ route('galeri') }}" {{ !request('kategori') ? 'selected' : '' }}>
                 Semua Kategori
-            </a>
+            </option>
             @foreach($kategoris as $kategori)
                 @php
                     $kategoriSlug = strtolower(str_replace([' ', '&'], ['', ''], $kategori->nama));
                 @endphp
-                <a href="{{ route('galeri', ['kategori' => $kategoriSlug]) }}" 
-                   class="btn btn-outline-primary {{ request('kategori') === $kategoriSlug ? 'active' : '' }}">
+                <option value="{{ route('galeri', ['kategori' => $kategoriSlug]) }}" {{ request('kategori') === $kategoriSlug ? 'selected' : '' }}>
                     {{ $kategori->nama }}
-                </a>
+                </option>
             @endforeach
-        </div>
+        </select>
     </div>
 
-    <!-- Gallery Grid -->
+    <!-- Gallery Grid - CSS Grid Biasa -->
     <div class="gallery-grid">
         @forelse($fotos as $foto)
             <div class="gallery-card">
-                <div class="gallery-image-container">
-                    <img src="{{ Storage::url($foto->path) }}" alt="{{ $foto->judul }}" class="gallery-image">
-                    <div class="gallery-overlay">
-                        <h3 class="gallery-title">{{ $foto->judul }}</h3>
-                        <p class="gallery-date">{{ \Carbon\Carbon::parse($foto->created_at)->translatedFormat('d M Y') }}</p>
+                <!-- Image Container -->
+                <div class="gallery-card-image" onclick="openImagePreview('{{ Storage::url($foto->path) }}', '{{ $foto->judul }}')">
+                    <img src="{{ Storage::url($foto->path) }}" alt="{{ $foto->judul }}">
+                    <div class="card-image-overlay">
+                        <div style="color: white;">
+                            <h3 style="font-weight: 700; font-size: 1.125rem; margin-bottom: 4px;">{{ $foto->judul }}</h3>
+                            <p style="font-size: 0.875rem; opacity: 0.9;">{{ \Carbon\Carbon::parse($foto->created_at)->translatedFormat('d M Y') }}</p>
+                        </div>
                     </div>
                 </div>
-                <div class="gallery-info">
-                    <h3 class="gallery-title">{{ $foto->judul }}</h3>
-                    <p class="gallery-category">{{ $foto->kategori->nama ?? 'Umum' }}</p>
-                    <p class="gallery-info-date">
-                        <i class="fas fa-calendar"></i>
-                        {{ \Carbon\Carbon::parse($foto->created_at)->translatedFormat('d M Y') }}
-                    </p>
+
+                <!-- Card Content -->
+                <div class="gallery-card-content">
+                    <span class="badge-category">{{ $foto->kategori->nama ?? 'P5' }}</span>
+                    <h3 class="gallery-card-title">{{ $foto->judul }}</h3>
+                    <p class="gallery-card-desc">{{ $foto->keterangan ?? 'Dokumentasi kegiatan sekolah' }}</p>
+                    
+                    <!-- Action Buttons -->
+                    <div class="card-actions">
+                        <!-- Like Button - Shows total likes from all users in database -->
+                        <button type="button" onclick="event.stopPropagation(); handleLike({{ $foto->id }}, this)" class="card-action-btn {{ $foto->is_liked ? 'liked' : '' }}" data-foto-id="{{ $foto->id }}">
+                            <i class="{{ $foto->is_liked ? 'fas' : 'far' }} fa-heart"></i>
+                            <span class="like-count">{{ $foto->likes_count ?? 0 }}</span>
+                        </button>
+                        <!-- Download Button - Requires login -->
+                        <button type="button" onclick="event.stopPropagation(); handleDownload({{ $foto->id }})" class="card-action-btn">
+                            <i class="fas fa-download"></i>
+                            <span>Download</span>
+                        </button>
+                    </div>
                 </div>
             </div>
         @empty
-            <div class="col-12 text-center py-5">
             <div class="empty-state">
-                    <div class="empty-state-icon">
-                <i class="fas fa-images"></i>
-            </div>
-                    <h2>Tidak ada foto tersedia</h2>
-                    <p class="lead">Belum ada foto yang diunggah untuk kategori ini.</p>
-    </div>
+                <div class="empty-state-icon">
+                    <i class="fas fa-images"></i>
+                </div>
+                <h2>Tidak ada foto tersedia</h2>
+                <p>Belum ada foto yang diunggah untuk kategori ini.</p>
             </div>
         @endforelse
+    </div>
+</div>
+
+<!-- Simple Image Preview Modal -->
+<div id="imagePreviewModal" class="image-preview-modal" onclick="closeImagePreview()">
+    <span class="image-preview-close" onclick="closeImagePreview()">&times;</span>
+    <img class="image-preview-content" id="previewImage" onclick="event.stopPropagation()">
+    <div class="image-preview-caption" id="previewCaption"></div>
 </div>
 
     <!-- Modal for Image View -->
@@ -749,10 +917,10 @@ body {
                     </div>
                     <form id="commentForm" class="mt-3">
                         <div class="mb-3">
-                            <input type="text" id="nama" class="form-control" placeholder="Nama Anda..." required>
+                            <input type="text" id="comment-nama" class="form-control" placeholder="Nama Anda..." required>
                         </div>
                         <div class="mb-3">
-                            <textarea id="komentar" class="form-control" rows="3" placeholder="Tulis komentar Anda..." required></textarea>
+                            <textarea id="comment-komentar" class="form-control" rows="3" placeholder="Tulis komentar Anda..." required></textarea>
                         </div>
                         <button class="btn btn-primary" type="submit">Kirim Komentar</button>
                     </form>
@@ -769,16 +937,16 @@ body {
             <p>Silakan isi data diri Anda untuk mengunduh foto.</p>
             <form id="downloadForm">
                 <div class="form-group">
-                    <label for="nama">Nama Lengkap</label>
-                    <input type="text" id="nama" class="form-control" required>
+                    <label for="download-nama">Nama Lengkap</label>
+                    <input type="text" id="download-nama" class="form-control" required>
                 </div>
                 <div class="form-group">
-                    <label for="email">Email Aktif</label>
-                    <input type="email" id="email" class="form-control" required>
+                    <label for="download-email">Email Aktif</label>
+                    <input type="email" id="download-email" class="form-control" required>
                 </div>
                 <div class="form-group">
-                    <label for="password">Password Email Kamu</label>
-                    <input type="password" id="password" name="password" class="form-control" required minlength="6">
+                    <label for="download-password">Password Email Kamu</label>
+                    <input type="password" id="download-password" name="password" class="form-control" required minlength="6">
                     <small class="form-text text-muted">Minimal 6 karakter</small>
                 </div>
                 
@@ -933,8 +1101,8 @@ function toggleLike(fotoId, button) {
 // Handle comment form submission with AJAX
 document.getElementById('commentForm').addEventListener('submit', function(e) {
     e.preventDefault();
-    const nama = document.getElementById('nama').value;
-    const komentar = document.getElementById('komentar').value;
+    const nama = document.getElementById('comment-nama').value;
+    const komentar = document.getElementById('comment-komentar').value;
     
     if (!nama.trim() || !komentar.trim()) {
         showNotification('Harap isi nama dan komentar', 'error');
@@ -948,9 +1116,9 @@ document.getElementById('commentForm').addEventListener('submit', function(e) {
 document.getElementById('downloadForm').addEventListener('submit', function(e) {
     e.preventDefault();
     
-    const nama = document.getElementById('nama').value;
-    const email = document.getElementById('email').value;
-    const password = document.getElementById('password').value;
+    const nama = document.getElementById('download-nama').value;
+    const email = document.getElementById('download-email').value;
+    const password = document.getElementById('download-password').value;
     
     if (!nama.trim() || !email.trim() || !password.trim()) {
         showNotification('Harap isi semua data dengan benar sebelum mengunduh foto', 'error');
@@ -1110,5 +1278,190 @@ function showNotification(message, type = 'info') {
         }, 300);
     }, 3000);
 }
+
+// ============================================
+// LIKE & DOWNLOAD SYSTEM WITH DATABASE
+// ============================================
+// Like counts are stored in database with user_id and foto_id
+// Each user can only like once per photo (unique constraint)
+// Like count shows total from ALL users who liked the photo
+
+// Check if user is authenticated
+const isAuthenticated = {{ auth()->check() ? 'true' : 'false' }};
+
+/**
+ * Handle Like button click
+ * - Checks authentication (redirect to register if not logged in)
+ * - Sends AJAX request to store/remove like in database
+ * - Updates like count in real-time without page reload
+ * - Updates button state (red heart if liked, outline if not)
+ */
+function handleLike(fotoId, button) {
+    
+    // Check authentication
+    if (!isAuthenticated) {
+        // Show notification and redirect to register
+        showNotification('Silakan login atau daftar terlebih dahulu untuk like foto', 'error');
+        setTimeout(() => {
+            window.location.href = '{{ route("register") }}';
+        }, 1500);
+        return;
+    }
+
+    // Disable button to prevent double clicks
+    button.disabled = true;
+
+    // User is authenticated, proceed with like
+    fetch(`/galeri/like/${fotoId}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        }
+    })
+    .then(response => {
+        console.log('Response status:', response.status);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log('Like data received:', data);
+        
+        if (data.success) {
+            // Update like count from database (real-time update)
+            const likeCount = button.querySelector('.like-count');
+            if (likeCount) {
+                likeCount.textContent = data.likes_count; // Total likes from ALL users
+            }
+            
+            // Update icon visual state
+            const icon = button.querySelector('i');
+            if (data.is_liked) {
+                button.classList.add('liked');
+                if (icon) {
+                    icon.className = 'fas fa-heart';
+                }
+            } else {
+                button.classList.remove('liked');
+                if (icon) {
+                    icon.className = 'far fa-heart';
+                }
+            }
+            
+            showNotification(data.message, 'success');
+        } else {
+            // Handle redirect if needed
+            if (data.redirect) {
+                showNotification(data.message, 'error');
+                setTimeout(() => {
+                    window.location.href = data.redirect;
+                }, 1500);
+            } else {
+                showNotification(data.message, 'error');
+            }
+        }
+    })
+    .catch(error => {
+        console.error('Like error details:', error);
+        showNotification('Terjadi kesalahan saat memproses like: ' + error.message, 'error');
+    })
+    .finally(() => {
+        // Re-enable button
+        button.disabled = false;
+    });
+}
+
+/**
+ * Handle Download button click
+ * - Checks authentication (redirect to register if not logged in)
+ * - Triggers file download from server
+ * - Logs download activity to database
+ */
+function handleDownload(fotoId) {
+    
+    // Check authentication
+    if (!isAuthenticated) {
+        // Show notification and redirect to register
+        showNotification('Silakan login atau daftar terlebih dahulu untuk download foto', 'error');
+        setTimeout(() => {
+            window.location.href = '{{ route("register") }}';
+        }, 1500);
+        return;
+    }
+
+    // User is authenticated, start download
+    showNotification('Mengunduh foto...', 'info');
+    
+    // Create a temporary link and trigger download
+    window.location.href = `/galeri/download/${fotoId}`;
+}
+
+// Open modal for image viewing
+function openModal(fotoId, imageSrc, title, category, date, likesCount, downloadsCount) {
+    currentFotoId = fotoId;
+    
+    // Set modal content
+    document.getElementById('modalImage').src = imageSrc;
+    document.getElementById('modalTitle').textContent = title;
+    document.getElementById('modalDate').textContent = date;
+    
+    // Update counts if elements exist
+    const modalLikeCount = document.querySelector('#imageModal .like-count');
+    if (modalLikeCount) modalLikeCount.textContent = likesCount;
+    
+    const modalCommentCount = document.querySelector('#imageModal .comment-count');
+    if (modalCommentCount) modalCommentCount.textContent = 0;
+    
+    // Show modal
+    const modal = document.getElementById('imageModal');
+    if (modal) {
+        modal.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+    }
+    
+    // Load approved comments
+    loadApprovedComments(fotoId);
+}
+
+// ============================================
+// SIMPLE IMAGE PREVIEW FUNCTIONS
+// ============================================
+
+/**
+ * Open image preview modal
+ * @param {string} imageSrc - Image source URL
+ * @param {string} caption - Image caption/title
+ */
+function openImagePreview(imageSrc, caption) {
+    const modal = document.getElementById('imagePreviewModal');
+    const modalImg = document.getElementById('previewImage');
+    const captionText = document.getElementById('previewCaption');
+    
+    modal.style.display = 'block';
+    modalImg.src = imageSrc;
+    captionText.innerHTML = caption;
+    document.body.style.overflow = 'hidden'; // Prevent background scrolling
+}
+
+/**
+ * Close image preview modal
+ */
+function closeImagePreview() {
+    const modal = document.getElementById('imagePreviewModal');
+    modal.style.display = 'none';
+    document.body.style.overflow = 'auto'; // Restore scrolling
+}
+
+// Close modal when pressing Escape key
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape' || event.key === 'Esc') {
+        const modal = document.getElementById('imagePreviewModal');
+        if (modal && modal.style.display === 'block') {
+            closeImagePreview();
+        }
+    }
+});
 </script>
 @endpush
